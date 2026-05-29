@@ -1,0 +1,73 @@
+# === Privacy guardrails ===
+# Anything in these patterns will NOT be committed even if accidentally placed here.
+# This file is the safety net — keep adding patterns as your private data evolves.
+
+# === your-input/ folder — designated drop-zone for personal data ===
+# Everything inside is gitignored EXCEPT the README that explains what to put here.
+# Drop your CV, preferences, target-companies, etc. into this folder.
+your-input/*
+!your-input/.gitkeep
+!your-input/README.md
+# Example files are committed so newcomers can copy them; your real cv.md /
+# preferences.md / companies.md / config.md stay ignored.
+!your-input/*.example.md
+
+# Personal memory / career artifacts (your local life)
+# Genericized so this public file doesn't leak real local folder names.
+# Add your own personal folder names here if you keep them near the repo.
+career/
+job-hunting/
+story-box/
+*-memory/
+
+# Local secrets and config
+.env
+.env.*
+*.private.md
+*-personal.md
+*-secret.md
+secrets/
+private/
+draft/
+
+# Scheduler / automation artifacts that contain personal info
+# NOTE: the public template scheduler-prompt-template.md is intentionally NOT ignored.
+SKILL.md
+scheduler-prompt.md
+sheet-id.txt
+
+# Original (un-sanitized) source documents — keep these in the private parent folder only
+*-narrative.md
+notes-*.md
+
+# Local OS clutter
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor caches
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs and temp
+*.log
+*.tmp
+*~
+
+# Node / Python in case you add code later
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Generated files
+build/
+dist/
+out/
+
+# Sensitive samples (your specific company picks, real job IDs, etc.)
+*-with-real-companies.*
+*-with-real-jobs.*
