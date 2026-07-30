@@ -4,14 +4,15 @@
 
 **언어:** [English](README.md) · 한국어
 
-EU에서 구직하다가 만들었습니다. 링크드인 "최근 24시간" 검색에서 새 공고가 몇
+EU에서 구직하다가 만들었습니다. LinkedIn "최근 24시간" 검색에서 새 공고가 몇
 시간 만에 사라지는 바람에, 보기도 전에 놓치는 일이 반복됐거든요. 그래서 쫓아
-다니는 일을 예약 에이전트에게 맡겼습니다. 매일 아침 링크드인과 인디드를 뒤져
-공고마다 제 CV에 적힌 증거와 대조하고 100점 만점으로 점수를 매깁니다. 그중
-상위 매칭이 아직 열려 있는지 확인한 뒤, 볼 가치가 있는 것만 이메일로
-보내줍니다. 공고가 검색 창에서 밀려나 사라지기 전에요.
+다니는 일을 예약 에이전트에게 맡겼습니다. 약속은 하나입니다. **나한테 정말
+맞는 공고가 올라오면 24시간 안에, 그 공고가 사라지기 전에 알게 된다.**
 
-채점 기준표는 감으로 만든 게 아닙니다. **제가 실제로 지원해서 결과까지 아는
+매일 아침 LinkedIn과 Indeed, 그리고 지금 집중해서 노리는 회사의 채용 페이지를
+뒤져 공고마다 제 CV에 적힌 증거와 대조하고 100점 만점으로 점수를 매깁니다. 그중 상위 매칭이
+아직 열려 있는지 확인한 뒤, 볼 가치가 있는 것만 이메일로 보내줍니다. 채점
+기준표는 감으로 만든 게 아닙니다. **제가 실제로 지원해서 결과까지 아는
 과거 실제 지원(Uber와 Google 서류 통과 건 포함)으로 백테스트해서 교정했습니다.**
 [Claude](https://claude.com) Cowork 모드로 만들고 운영합니다. 이름이 곧 문제
 정의입니다. **사라지기 전에 잡아라(catch before they vanish)**.
@@ -19,16 +20,94 @@ EU에서 구직하다가 만들었습니다. 링크드인 "최근 24시간" 검�
 > **v3 (2026-07).** 한 달간 매일 돌린 실운영과 위 백테스트를 반영해 다시
 > 썼습니다. 무엇이 왜 바뀌었는지: [`CHANGELOG.md`](CHANGELOG.md).
 
-## 기능
+## 데모
 
-| 기능 | 하는 일 |
+*(준비 중: [`your-input/`](your-input)의 가공 인물로 파이프라인을 한 번 완주한
+결과, 그러니까 아침 이메일과 시트를 스크린샷으로 올릴 예정입니다.)*
+
+## 뭘 하는 도구인가
+
+매일 도는 job-alert 파이프라인입니다. 해주는 일 네 가지:
+
+| 기능 | 한 줄 설명 |
 |---|---|
-| **증거 기반 채점** | JD의 실제 요구사항을 뽑아 `cv.md`에 적힌 증거와 하나씩 대조합니다 — 인상 점수 없음. 과거 실제 지원 백테스트로 교정 ([기준표](docs/fit-scoring-rubric.md)). |
-| **채점기를 내가 통제** | **Skill calibration** 섹션이 credit 상한을 정하고("SQL은 대시보드 수준 — 데이터 엔지니어링 요건에 Direct 금지"), **Eligibility**의 knockout 조건이 무의미한 공고를 점수 전에 걸러냅니다. |
-| **영구 링크 저장** | 공고별 `jobs/view/{id}` 링크를 저장합니다. 검색 URL은 저장하지 않습니다 — 24시간 필터 검색 URL은 움직이는 창이라 몇 시간이면 죽습니다. |
-| **한 공고 = 한 행, 영원히** | 지문(fingerprint) 3개를 시트 전체 행과 대조합니다. 시간 창 없음 — 실운영에서 같은 공고를 세 번 쌓았던 48시간 창 규칙을 교체한 결과입니다. |
-| **열림 확인** | 80점 초과 공고는 발송 전에 아직 열려 있는지 확인합니다 — 죽은 공고에 지원하는 일이 없게. |
-| **살아 있고, 따져볼 수 있는 운영** | 매칭 0건이어도 "System alive"를 보내고, 매 실행 끝에 리포트 체크리스트가 붙습니다. 시트에 직접 적는 지원 결과(`Applied` / `Passed - CV` / ...)는 그대로 outcome funnel이 됩니다 (cold와 referral은 분리). |
+| **증거 기반 fit scoring** | JD의 실제 요구사항을 뽑아 `cv.md`에 적힌 증거와 하나씩 대조해 채점합니다 — 인상 점수 없음. 점수는 지원 노력을 어디에 쓸지 정하는 우선순위 신호입니다 ([기준표](skills/job-alert/fit-scoring-rubric.md)). |
+| **Skill calibration** | 내 스킬을 **Core / Transferable(상한 포함) / Gap**으로 나눠, 채점기가 "할 수 있는 것 · 인접한 것 · 주장하면 안 되는 것"을 알고 채점하게 합니다. 에이전트가 CV에서 초안을 뜨고, 확정은 내가 합니다. |
+| **데일리 스캔** | 매 실행마다 LinkedIn + Indeed(최근 24시간)를 검색하고 Aiming 회사의 채용 페이지를 직접 확인합니다. 일주일에 하루 deep-scan 날에는 나머지 관심 회사까지 훑습니다. |
+| **한 공고 = 한 행** | 지문(fingerprint) 3개(LinkedIn jobId / 채용 페이지 job-ID / 회사+정규화 직함)를 시트 전체 행과 대조합니다. 시간 창 없음 — 한 번 기록된 공고는 중복으로 다시 나타나지 않습니다. |
+
+## 뭐가 다른가
+
+나만을 위해 일하는 headhunter를 고용한다고 생각하면 됩니다. 아무 데나 지원서를
+뿌리는 게 아니라, 매일 아침 시장을 지켜보다가 내 경력 증거가 실제로 받쳐 주는
+공고에만 주의를 모아 줍니다.
+
+에이전트 프롬프트 공개 자체는 이제 흔합니다. 이 repo가 더하는 것은 **운영
+기록**입니다. 한 달을 매일 돌리고 과거 실제 지원(Uber·Google 서류 통과 건
+포함)으로 백테스트해서 공개 rubric을 교정했고, 바꾼 내용과 이유를 전부
+[changelog](CHANGELOG.md)와 [기준표](skills/job-alert/fit-scoring-rubric.md)에
+적어 뒀습니다.
+
+## 시작하는 법
+
+설치하는 프로그램이 아니라 AI 에이전트가 매일 아침 실행하는 작업 지시문입니다.
+서버도, 코드 설정도 필요 없습니다. 처음이면 30분 정도 잡으세요. 필요한 것:
+
+- 매일 예약 작업(scheduled task)을 돌릴 수 있는 AI 에이전트. Claude **Cowork
+  모드**로 만들고 테스트했습니다.
+- Claude에 connector 3개 연결 (connector는 Claude를 내 계정의 다른 서비스에
+  이어 주는 공식 연결 기능입니다): 채용 사이트를 읽을 **Chrome**, 시트에
+  기록할 **Google Drive**, 알림을 보낼 **Gmail**.
+- 구글 계정과 알림 받을 이메일 주소.
+
+그다음은 네 단계입니다. git이나 코딩 지식 없이 따라올 수 있게 쓴 전체 안내는
+[setup.md 한국어판](setup.md#설정-한국어)에 있습니다:
+
+1. **repo 받기** — `git clone`, 또는 이 페이지에서 Code → Download ZIP.
+2. **탭 2개짜리 구글 시트 만들기**, 그리고 시트 ID를 `your-input/config.md`에
+   붙여넣기 — [setup.md 2단계](setup.md#2단계--구글-시트-만들기).
+3. **[`your-input/`](your-input) 채우기** — `*.example.md` 4개(전부 지어낸 가공
+   인물)를 복사해 본인 내용으로 고치기.
+4. **에이전트에 넘기기.** Claude Code라면 명령 두 줄로 `job-alert` skill이
+   설치됩니다:
+
+   ```
+   /plugin marketplace add Journey-512/catch-before-jobs-vanish
+   /plugin install catch-before-jobs-vanish@catch-before-jobs-vanish
+   ```
+
+   Cowork를 비롯한 다른 에이전트라면
+   [`skills/job-alert/SKILL.md`](skills/job-alert/SKILL.md)의 프롬프트 블록을
+   복사해 매일 예약 작업에 넣으면 됩니다 (한국어 안내:
+   [`docs/skill.ko-KR.md`](docs/skill.ko-KR.md)) —
+   [setup.md 4단계](setup.md#4단계--에이전트에-파이프라인-넘기기).
+
+그다음 한 번 수동으로 실행해 보고(또는 내일 아침 이메일을 기다리고),
+[setup.md 5단계](setup.md#5단계--테스트-실행)의 체크리스트와 맞춰 보세요.
+
+## 쓰는 법
+
+가공 인물(Berlin에 사는 모빌리티·여행 5년차 PM, EU 전역의 Senior PM 자리가
+목표)의 어느 아침:
+
+1. **9시, 이메일이 도착합니다.** Top(85점 이상)과 Strong(70-84점)만 담겨
+   있습니다. 예를 들어 Aiming 회사의 Senior PM 공고가 86점을 받았고, 한 줄짜리
+   Fit Reason에 어떤 요건이 맞았는지, 가장 큰 공백이 뭔지, 지원서에서 앞세울
+   각도가 뭔지 적혀 있습니다. headhunter 공고에는 `[Headhunter]` 태그가, 자동
+   추가된 회사에는 거부(veto) 안내가 붙습니다. 공고가 없는 날에도 메일은
+   옵니다: "No new matches. System alive."
+2. **전체 그림이 궁금하면 시트를 엽니다.** 발견된 공고는 전부 행으로
+   남습니다. 이메일에서 빠진 것도 `Excluded (...)`나 `Closed (날짜)` 표시와
+   함께 남아 있어서, "이 공고는 왜 이메일에 없지?"의 답이 항상 시트에
+   있습니다.
+3. **지원하고, 기록합니다.** Status 열에 `Applied`(referral로 지원했으면
+   `Applied (referral)`)를 적고, 결과가 나오는 대로 `Passed - CV`나
+   `Rejected - CV`로 갱신합니다.
+4. **일주일에 한 번, deep-scan 날 이메일에 funnel 요약이 붙습니다.** 직접 적어
+   둔 Status를 바탕으로 점수 구간별 지원 건수와 CV-pass rate(서류 통과율)를
+   cold와 referral로 나눠, 표본 수(n)와 함께 보여줍니다. `preferences.md`나
+   calibration 줄을 고칠 때 쓰는 근거 데이터가 이것입니다 — 실행은 측정하고
+   보고할 뿐, 결정은 사람이 합니다.
 
 ## 작동 방식
 
@@ -36,56 +115,33 @@ EU에서 구직하다가 만들었습니다. 링크드인 "최근 24시간" 검�
 
 ```mermaid
 flowchart LR
-  A[("1 · 내 파일 읽기<br/>cv · preferences<br/>companies · config")] --> B["2 · 후보 모으기<br/>24시간 검색 · 정규화<br/>하드 게이트 · 중복 제거"] --> C["3 · 점수 매기기<br/>증거 채점 0-100<br/>컷 70 · 열림 확인"] --> D[("4 · 기록과 알림<br/>시트 기록 · 아침 이메일<br/>하트비트")]
+  A[("1 · 내 파일 읽기<br/>cv · preferences<br/>companies · config")] --> B["2 · 후보 모으기<br/>24시간 검색 · 정규화<br/>하드 게이트 · 중복 제거"] --> C["3 · 점수 매기기<br/>증거 채점 0-100<br/>컷 70 · 열림 확인"] --> D[("4 · 기록과 알림<br/>시트 기록 · 아침 이메일<br/>heartbeat")]
 ```
 
 앞의 세 단계는 읽기만 합니다. 쓰기는 전부 4단계에서만 일어나서, 실행이 도중에
 죽어도 반쯤 된 일이 남지 않습니다. 속을 들여다보면 이 4단계는 목적이 하나씩인
-10개 스텝으로 나뉩니다 — 전체 지도와 각 선택의 이유는
-[`docs/architecture.md`](docs/architecture.md)에 있습니다.
+step 10개로 나뉩니다. 지도는 프롬프트 그 자체입니다:
+[`skills/job-alert/SKILL.md`](skills/job-alert/SKILL.md) — 한국어 안내는
+[`docs/skill.ko-KR.md`](docs/skill.ko-KR.md).
 
-규칙 소스는 스케줄러 프롬프트([로직](scheduler-prompt-template.md), 절대 안
-고침)와 [`your-input/`](your-input)(내 데이터, 실행 시점에 읽음), 딱
-둘입니다. 구글 시트에는 규칙이 아니라 기록만 남습니다.
+규칙 소스는 딱 둘입니다: 파이프라인 프롬프트(로직, 절대 안 고침)와
+[`your-input/`](your-input)(내 데이터, 실행 시점에 읽음). 구글 시트에는 규칙이
+아니라 기록만 남습니다.
 
-에이전트 프롬프트 공개 자체는 이제 흔합니다. 이 레포가 더하는 것은 **운영
-기록**입니다. 한 달을 매일 돌리고 실제 지원 결과로 백테스트해서 공개 rubric을
-교정했습니다. 바꾼 내용과 이유는 전부 [changelog](CHANGELOG.md)와
-[기준표](docs/fit-scoring-rubric.md)에 적어 뒀습니다.
+한 달 실운영이 규칙으로 승격시킨 안전장치들:
 
-## 데모
+- **검색 URL이 아니라 영구 링크** — 24시간 필터가 걸린 검색 URL은 움직이는
+  창이라 몇 시간이면 죽습니다. 공고별 `jobs/view/{id}` 링크는 안 죽습니다.
+- **열림 확인** — 80점 초과 공고는 발송 전에 아직 열려 있는지 확인합니다. 죽은
+  공고에 지원하는 일이 없게.
+- **heartbeat(생존 신호)** — 매칭 0건이어도 "No new matches. System alive."를
+  보냅니다. 그래서 침묵은 언제나 고장을 뜻하지, 0건을 뜻하지 않습니다.
 
-*(준비 중: [`your-input/`](your-input)의 가공 인물로 파이프라인을 한 번 완주한
-결과, 그러니까 아침 이메일과 시트를 스크린샷으로 올릴 예정입니다.)*
-
-## 필요한 것
-
-설치하는 프로그램이 아니라 AI 에이전트가 매일 아침 실행하는 작업 지시문입니다.
-서버도, 코드 설정도 필요 없습니다.
-
-- 매일 예약 작업(scheduled task)을 돌릴 수 있는 AI 에이전트. Claude **Cowork
-  모드**로 만들고 테스트했습니다.
-- Claude에 커넥터(connector) 3개 연결: 채용 사이트를 읽을 **Chrome**, 시트에
-  기록할 **Google Drive**, 알림을 보낼 **Gmail**.
-- 구글 계정과 알림 받을 이메일 주소.
-
-## 빠른 시작
-
-**가장 빠른 길**: 미리 채워 둔 예시(전부 지어낸 가공 인물)를 복사해서
-고치세요.
-
-```bash
-git clone https://github.com/<본인-아이디>/catch-before-jobs-vanish.git
-cd catch-before-jobs-vanish/your-input
-cp cv.example.md cv.md && cp preferences.example.md preferences.md
-cp companies.example.md companies.md && cp config.example.md config.md
-```
-
-그다음 탭 2개짜리 구글 시트를 만들고 프롬프트를 매일 예약 작업에 붙여넣은 뒤,
-내일 아침 이메일을 기다리면 됩니다.
-
-**전체 안내** (30분 코스, git이나 코딩 지식 없이 따라올 수 있게 썼습니다):
-**[setup.md](setup.md)**.
+**Outcome loop.** 내가 직접 적는 Status 열(`Applied` / `Passed - CV` /
+`Rejected - CV` / `Lost`, 해당되면 `(referral)` 접미)이 그대로 라벨 데이터가
+됩니다. deep-scan 날 이메일에 점수 구간별 CV-pass rate를 cold/referral로 나눠
+표본 수와 함께 붙여 줍니다. 파이프라인은 측정하고 보고까지만 합니다 — 규칙을
+바꿀지는 언제나 사람이 정합니다.
 
 ## 프로젝트 구조
 
@@ -94,10 +150,13 @@ catch-before-jobs-vanish/
 ├── README.md · README.ko-KR.md      이 페이지 (영어 · 한국어)
 ├── CHANGELOG.md                     버전 기록 — 변경마다 이유를 함께 적음
 ├── setup.md                         30분 설치 안내 (영어 + 한국어)
-├── scheduler-prompt-template.md     매일 도는 프롬프트 — 로직 전부, 개인값 0
+├── skills/
+│   └── job-alert/
+│       ├── SKILL.md                 매일 도는 파이프라인 프롬프트 — 로직 전부, 개인값 0
+│       └── fit-scoring-rubric.md    채점 기준표 + 백테스트가 바꾼 것
+├── .claude-plugin/                  명령 두 줄 설치를 가능하게 하는 manifest 파일
 ├── docs/
-│   ├── architecture.md              파이프라인 전체 지도와 그렇게 만든 이유
-│   └── fit-scoring-rubric.md        채점 기준표 + 백테스트가 바꾼 것
+│   └── skill.ko-KR.md               파이프라인 프롬프트의 한국어 안내
 ├── your-input/                      내 개인 데이터 자리 (gitignore — 예시만 공개)
 │   ├── README.md                    4개 파일에 각각 뭘 넣는지
 │   └── *.example.md                 채워진 예시 (가공 인물) — 복사해서 수정
@@ -109,20 +168,20 @@ catch-before-jobs-vanish/
 
 | 층 | 선택 |
 |---|---|
-| 실행 | Claude (Cowork 모드) — 프로그램이 아니라 예약된 프롬프트 |
-| 수집 | Chrome 커넥터로 링크드인 + 인디드. 문서화는 개념 수준까지만 |
-| 기록 | Google Drive 커넥터로 구글 시트 (탭 2개) |
-| 알림 | Gmail 커넥터, draft-then-send |
-| 설정 | `your-input/`의 마크다운 파일 |
+| 실행 | Claude — Cowork 모드의 예약 프롬프트(만든 사람이 쓰는 방식), 또는 Claude Code의 `job-alert` skill(명령 두 줄 설치) |
+| 수집 | Chrome connector로 LinkedIn + Indeed. 문서화는 개념 수준까지만 |
+| 기록 | Google Drive connector로 구글 시트 (탭 2개) |
+| 알림 | Gmail connector, draft-then-send |
+| 설정 | `your-input/`의 Markdown 파일 |
 | 서버 / 코드 | 없음 |
 
 ## 자주 묻는 질문
 
 **대신 지원까지 해주나요?** 아니요, 일부러 안 합니다. 지원은 판단이 필요한
-일입니다. 이 도구가 하는 일은 공고를 놓치지 않게 하고 아침마다 검색을 반복하는
-수고를 없애는 데까지입니다.
+일입니다. 이 도구가 하는 일은 공고를 놓치지 않게 하고, 아침마다 검색을
+반복하는 수고를 없애는 데까지입니다.
 
-**링크드인에서 이래도 되나요?** 이 레포는 수집을 개념 수준까지만 문서화하고
+**LinkedIn에서 이래도 되나요?** 이 repo는 수집을 개념 수준까지만 문서화하고
 상세 레시피는 싣지 않습니다. 본인 계정으로 사람의 속도에 맞춰 쓰는 것도, 각
 사이트의 약관을 지키는 것도 사용자 몫입니다.
 
@@ -135,19 +194,29 @@ loop가 측정합니다.
 
 ## 만든 사람
 
-프로덕트 매니저입니다. 제 EU 구직에 쓰려고 만들었고 그 뒤로 매일 아침 돌고
+Product Manager입니다. 제 EU 구직에 쓰려고 만들었고 그 뒤로 매일 아침 돌고
 있습니다. 만들면서 내린 결정과 실패·복구의 긴 이야기는 따로 정리 중입니다.
 공개되면 여기에 링크를 추가할게요.
 
 ## 면책
 
-- 링크드인, 인디드, Google을 비롯해 본문에 등장하는 어떤 회사와도 무관한 개인
+- LinkedIn, Indeed, Google을 비롯해 본문에 등장하는 어떤 회사와도 무관한 개인
   프로젝트입니다.
+- 내 계정 안에서, 내 컴퓨터로 도는 오픈소스입니다. 뒤에 호스팅 서비스가 없고,
+  만든 사람은 사용자의 어떤 데이터도 수집·저장·접근하지 않습니다 — 공고도,
+  시트도, 이메일도 전부 사용자 계정에만 있습니다.
 - 수집은 개념 수준까지만 문서화합니다. 각 사이트의 약관을 지키는 책임은
   사용자에게 있습니다.
-- Fit 점수는 우선순위 신호이지, 서류 통과 예측이 아닙니다.
+- Fit Score는 우선순위 신호이지, 서류 통과 예측이 아닙니다.
+- AI 에이전트가 나 대신 움직이는 도구입니다. 매일 아침 에이전트가 쓰고 보낸
+  것을 확인하는 최종 책임은 사용자에게 있습니다.
 - 구직 결과를 보장하지 않습니다.
 
 ## 라이선스
 
-[MIT](LICENSE). 포크해서 고치고 직접 운영하세요.
+[MIT](LICENSE). fork해서 고치고 직접 운영하세요.
+
+## 연락처
+
+[LinkedIn](https://www.linkedin.com/in/journeymjlee/) ·
+[hemegi.lee@gmail.com](mailto:hemegi.lee@gmail.com)
