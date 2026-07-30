@@ -123,8 +123,8 @@ that month proved and disproved.
 - **Headhunter rule** — intermediary postings are labeled, never
   score-discounted: information scarcity is not evidence of mismatch, and the
   outcome loop judges empirically whether they convert.
-- **Fictional demo persona** — the `your-input/` examples now model a 5-year
-  mobility & travel PM (invented end to end) whose files exercise the new
+- **Fictional demo persona** — the `your-input/` examples now model a 3-year
+  travel & mobility PM (invented end to end) whose files exercise the new
   calibration, eligibility, and Aiming features.
 - **Korean README split out** — `README.ko-KR.md` now carries the full Korean
   page; the other docs stay bilingual within one file.
@@ -266,7 +266,7 @@ company watchlist with a quality gate; draft-then-send email.
   무시.
 - **헤드헌터 규칙** — 중개 공고는 점수 할인 없이 라벨만: 정보 부족은 부적합의
   증거가 아니고, 전환 여부는 outcome loop가 실측으로 판정.
-- **가공 인물 데모** — `your-input/` 예시가 완전 창작된 모빌리티·여행 5년차
+- **가공 인물 데모** — `your-input/` 예시가 완전 창작된 여행·모빌리티 3년차
   PM으로 바뀌어, 새 calibration·eligibility·Aiming 기능을 그대로 시연합니다.
 - **한국어 README 분리** — `README.ko-KR.md`가 한국어 페이지 전체를 담습니다.
   나머지 문서는 기존대로 한 파일에 영어·한국어를 같이 둡니다.

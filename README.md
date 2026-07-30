@@ -33,16 +33,23 @@ A daily job-alert pipeline. Four things it does for you:
 
 | Feature | In one line |
 |---|---|
-| **Evidence-based fit scoring** | Extracts each JD's actual requirements and grades them against written evidence in your `cv.md` — no impression scores. The score is a priority signal for where to spend application effort ([rubric](skills/job-alert/fit-scoring-rubric.md)). |
-| **Skill calibration** | Sorts your skills into **Core / Transferable (with caps) / Gap**, so the scorer knows what you do, what's adjacent, and what you can't claim. An agent drafts it from your CV; you confirm it. |
-| **Daily scan** | Searches LinkedIn + Indeed (last 24 hours) and checks your Aiming companies' careers pages on every run; once a week, a deep-scan day sweeps the rest of your watchlist. |
-| **One posting = one row** | Three fingerprints (LinkedIn jobId / careers job-ID / company + normalized title) are matched against the whole Sheet with no time window — a duplicate never comes back. |
+| **Evidence-based fit scoring** | Every posting is graded against what your CV actually shows, requirement by requirement — no buzzword matching, and the Fit Reason tells you why it scored what it did ([rubric](skills/job-alert/fit-scoring-rubric.md)). |
+| **Skill calibration** | You state how far you've really gone with each skill, and the scorer can never credit you above that line. An agent drafts the list from your CV; you confirm it. |
+| **Daily scan** | Checks LinkedIn + Indeed (last 24 hours) and the careers pages of the companies you're gunning for, every morning — before postings rotate out of the search window; once a week it sweeps the rest of your watchlist. |
+| **One posting = one row** | A posting you've already seen never comes back as new — whichever site it resurfaces on, however its link has changed. |
 
 ## Why it's different
 
-Think of it as hiring a headhunter who works only for you. It doesn't spray
-applications everywhere — it watches the market every morning and points your
-attention at the postings your career evidence actually supports.
+Think of it as hiring a headhunter who works only for you. It watches the
+market every morning and points your attention at the postings your career
+evidence actually supports.
+
+Against the usual alternatives: a LinkedIn saved search pings you with
+everything and ranks nothing, and an auto-apply bot sprays applications you
+would never have chosen. This tool sits deliberately between the two — and it
+does **not** apply for you. Its job is to make sure you never miss the window
+and never waste a morning re-searching; applying is judgment, and the
+judgment stays yours.
 
 Plenty of projects publish agent prompts — that part is commodity. What this
 repo adds is the **operating record**: a public rubric that a month of daily
@@ -79,22 +86,23 @@ coding knowledge assumed:
    /plugin install catch-before-jobs-vanish@catch-before-jobs-vanish
    ```
 
-   On Cowork or any other agent, copy the prompt block from
+   On Cowork or any other agent, paste the prompt block from
    [`skills/job-alert/SKILL.md`](skills/job-alert/SKILL.md) into a daily
-   scheduled task —
-   [setup.md, Step 4](setup.md#step-4--hand-the-pipeline-to-your-agent).
+   scheduled task
+   ([setup.md, Step 4](setup.md#step-4--hand-the-pipeline-to-your-agent)).
 
 Then trigger it once manually (or wait for tomorrow's email) and check the
 results against [setup.md, Step 5](setup.md#step-5--test-run).
 
 ## How to use
 
-A morning with the example persona — a fictional 5-year mobility & travel PM
-based in Berlin, targeting Senior PM roles across the EU:
+A morning with the example persona — a fictional 3-year travel & mobility PM
+applying from Seoul with EU work authorization, targeting Product Manager
+roles across the EU:
 
 1. **9:00 — the email arrives.** Only Top (85+) and Strong (70-84) matches;
-   say a Senior PM posting at one of their Aiming companies scored 86, with a
-   one-line Fit Reason: which requirements matched, the main gap, the angle
+   say a Product Manager posting at an Aiming company scored 86,
+   with a one-line Fit Reason: which requirements matched, the main gap, the angle
    to lead with. Headhunter posts are tagged `[Headhunter]`; auto-added
    companies come with a veto prompt. On a quiet day the mail still arrives:
    "No new matches. System alive."
@@ -105,10 +113,8 @@ based in Berlin, targeting Senior PM roles across the EU:
    (`Applied (referral)` if someone referred them), later updated to
    `Passed - CV` or `Rejected - CV`.
 4. **Once a week, the deep-scan email adds a funnel summary** built from
-   those Status entries: applications and CV-pass rate per score band, cold
-   and referral kept separate, sample sizes included. That's the data they
-   use when adjusting `preferences.md` or a calibration line — the run
-   reports, they decide.
+   those Status entries — is the score actually finding the postings worth
+   their time? How that loop works: [How it works](#how-it-works).
 
 ## How it works
 
@@ -127,12 +133,18 @@ at [`docs/skill.ko-KR.md`](docs/skill.ko-KR.md).
 
 The pipeline has exactly **two rule sources**: the pipeline prompt (the
 logic, never edited) and [`your-input/`](your-input) (your data, read at
-runtime). The Google Sheet holds records, never rules.
+runtime). The Google Sheet holds records, never rules. The scoring detail —
+the credit ladder and the **Core / Transferable (with caps) / Gap**
+calibration classes — lives in the
+[rubric](skills/job-alert/fit-scoring-rubric.md).
 
 A few safeguards a month of production runs promoted into rules:
 
 - **Permalinks, never search URLs** — a 24h-filtered search URL is a moving
   window that dies within hours; per-posting `jobs/view/{id}` links don't.
+- **One posting = one row, forever** — three fingerprints (LinkedIn jobId /
+  careers job-ID / company + normalized title) are matched against the whole
+  Sheet, with no time window.
 - **Liveness check** — everything scoring above 80 is verified still open
   before the email goes out. No more applying to ghosts.
 - **Heartbeat** — zero matches still sends "No new matches. System alive.",
@@ -143,7 +155,29 @@ A few safeguards a month of production runs promoted into rules:
 applies) doubles as label data. On the deep-scan day the email appends a
 funnel summary — CV-pass rate per score band, cold and referral separated,
 always with sample sizes. The pipeline measures and reports; changing the
-rules stays your call.
+rules stays your call. (What that measuring enables next:
+[Roadmap](#roadmap).)
+
+## Roadmap
+
+Today the outcome loop measures and reports; what to change with those
+numbers stays your read. Once enough outcomes accumulate — real sample
+sizes, not three data points — one planned feature switches on: **tuning
+suggestions from outcome comparison**. The run compares your recorded
+outcomes against your current settings and drafts a suggestion; you approve
+or ignore it.
+
+- A pattern keeps failing the CV screen → a suggested tightening of that
+  Skill calibration line or cap in `cv.md`.
+- A pattern keeps scoring high while you keep skipping it → a suggested
+  `preferences.md` change so it stops surfacing.
+- A pattern keeps converting → a suggested Aiming candidate in
+  `companies.md`.
+
+Three rules hold for every suggestion: nothing is applied automatically —
+each one passes your approval gate. Every suggestion carries its sample size
+(n), so a fluke can't pose as a pattern. And the prompt and rubric stay
+frozen — suggestions only ever touch your data files.
 
 ## Project structure
 
@@ -178,10 +212,6 @@ catch-before-jobs-vanish/
 | Servers / code | None |
 
 ## FAQ
-
-**Does it apply for me?** No — on purpose. Applying is judgment; this tool's
-job is to make sure you never miss the window and never waste a morning
-re-searching.
 
 **Is this allowed on LinkedIn?** This repo documents collection at the
 concept level only and ships no scraping recipes. Run it with your own

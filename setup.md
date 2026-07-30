@@ -78,7 +78,7 @@ account your Drive connector uses.
 ## Step 3 — Fill in `your-input/`
 
 The fastest way: the folder ships four filled-in **example files** for a
-made-up person (a fictional 5-year mobility & travel PM). Copy each, drop the
+made-up person (a fictional 3-year travel & mobility PM). Copy each, drop the
 `.example` from the name, and edit it with your details:
 
 ```bash
@@ -101,7 +101,8 @@ What each file is for:
 - `companies.md` — target-company whitelist with **Aiming** flags + auto-add
   rule
 - `config.md` — Sheet ID, email recipient, subject, schedule, deep-scan
-  weekday, per-tier cap
+  weekday (one day a week the run sweeps your whole watchlist, not just the
+  fresh postings), per-tier cap
 
 **About the Skill calibration section in `cv.md` — read this once.** It's a
 list where each line states how far you've *actually* gone with a skill. It
@@ -284,7 +285,7 @@ https://docs.google.com/spreadsheets/d/이-긴-문자열이-시트-ID/edit
 
 ## 3단계 — `your-input/` 채우기
 
-가장 빠른 방법: 이 폴더에는 가공 인물(창작한 모빌리티·여행 5년차 PM)로 **미리
+가장 빠른 방법: 이 폴더에는 가공 인물(창작한 여행·모빌리티 3년차 PM)로 **미리
 채워 둔 예시 파일** 4개가 있습니다. 각 파일을 복사해 이름에서 `.example`만 빼고
 본인 내용으로 고치세요:
 
@@ -305,7 +306,8 @@ cd ..
 - `preferences.md` — 직무명, 지역, 산업, 최신성, 이메일 컷, 홈 타임존, 출력
   언어 + **Eligibility** 섹션 (지원이 무의미해지는 조건)
 - `companies.md` — 관심 회사 목록 (**Aiming** 표시 포함) + 자동 추가 규칙
-- `config.md` — 시트 ID, 이메일 수신자, 제목, 실행 일정, 딥스캔 요일, tier당
+- `config.md` — 시트 ID, 이메일 수신자, 제목, 실행 일정, 딥스캔 요일
+  (일주일에 하루, 새 공고만이 아니라 관심 회사 전체를 훑는 날), tier당
   회사 수 제한
 
 **`cv.md`의 Skill calibration 섹션은 한 번 짚고 넘어갈게요.** 스킬마다 "내가
@@ -400,11 +402,11 @@ Cowork 모드에서는 그냥 *"이 프롬프트를 매일 오전 9시에 실행
 
 ## 문제 해결
 
-| 증상 | 원인 추정 | 해결 |
-|---|---|---|
-| 저장한 링크드인 링크가 오후에 죽어 있음 | 영구 링크 대신 검색 URL을 저장함 | 에이전트가 검색 URL이 아니라 공고별 `jobs/view/{id}` 영구 링크를 추출하는지 확인 |
-| `Posted Date`에 "Last 24h"라고 적힘 | 상대 표현을 날짜로 바꾸지 않고 그대로 저장함 | 프롬프트 2단계가 캡처 시점에 YYYY-MM-DD로 변환하는지 확인 |
-| 엉뚱한 회사의 공고가 저장됨 | 링크드인이 자동 선택한 `currentJobId`를 그대로 믿음 | 결과 목록 전체를 읽어 회사+직무명으로 맞는 공고를 찾도록 확인 |
-| 같은 공고가 자꾸 다시 들어옴 | 중복 제거가 과거 기록을 못 봤거나(시트 읽기 실패), 채용 페이지 URL 표기가 제각각 | 이메일에 "과거 대조 못 함" 공지가 있는지 확인, 채용 사이트별로 URL이 한 가지 형식으로 통일되는지 확인 |
-| 관심 회사 공고가 안 잡힘 | 채용 페이지가 개편됐거나, 깨진 회사 필터가 조용히 빈 결과를 돌려줌 | 채용 페이지는 원래 예고 없이 바뀝니다 — 잡보드로 대체 검색하고 공백을 이메일에 알리는 게 정상 동작. 빈 검색 결과는 키워드 검색으로 한 번 더 확인해야 믿을 수 있습니다 |
-| 이메일이 아예 안 옴 | 실행이 죽었거나 발송에 실패함 | 하트비트 규칙 덕에 침묵 = 고장입니다: 예약 작업이 실행됐는지부터 보고, 그 다음 Gmail 초안함을 확인하세요 — 발송에 실패하면 초안이 남아 있습니다 |
+| 증상                             | 원인 추정                                             | 해결                                                                                                |
+| ------------------------------ | ------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| 저장한 링크드인 링크가 오후에 죽어 있음         | 영구 링크 대신 검색 URL을 저장함                              | 에이전트가 검색 URL이 아니라 공고별 `jobs/view/{id}` 영구 링크를 추출하는지 확인                                            |
+| `Posted Date`에 "Last 24h"라고 적힘 | 상대 표현을 날짜로 바꾸지 않고 그대로 저장함                         | 프롬프트 2단계가 캡처 시점에 YYYY-MM-DD로 변환하는지 확인                                                             |
+| 엉뚱한 회사의 공고가 저장됨                | 링크드인이 자동 선택한 `currentJobId`를 그대로 믿음               | 결과 목록 전체를 읽어 회사+직무명으로 맞는 공고를 찾도록 확인                                                               |
+| 같은 공고가 자꾸 다시 들어옴               | 중복 제거가 과거 기록을 못 봤거나(시트 읽기 실패), 채용 페이지 URL 표기가 제각각 | 이메일에 "과거 대조 못 함" 공지가 있는지 확인, 채용 사이트별로 URL이 한 가지 형식으로 통일되는지 확인                                     |
+| 관심 회사 공고가 안 잡힘                 | 채용 페이지가 개편됐거나, 깨진 회사 필터가 조용히 빈 결과를 돌려줌            | 채용 페이지는 원래 예고 없이 바뀝니다 — 잡보드로 대체 검색하고 공백을 이메일에 알리는 게 정상 동작. 빈 검색 결과는 키워드 검색으로 한 번 더 확인해야 믿을 수 있습니다 |
+| 이메일이 아예 안 옴                    | 실행이 죽었거나 발송에 실패함                                  | 하트비트 규칙 덕에 침묵 = 고장입니다: 예약 작업이 실행됐는지부터 보고, 그 다음 Gmail 초안함을 확인하세요 — 발송에 실패하면 초안이 남아 있습니다            |

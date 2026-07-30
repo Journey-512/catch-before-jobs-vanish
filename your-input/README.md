@@ -16,9 +16,10 @@ system by editing these files; the Google Sheet holds records, never rules.
 ## Fastest start: copy the examples
 
 You don't have to write these from scratch. This folder ships four **filled-in
-example files** for a made-up person — a 5-year mobility & travel PM based in
-Berlin, invented end to end for the demo. Copy each one, drop the `.example`
-from the name, then replace the contents with your own details:
+example files** for a made-up person — a 3-year travel & mobility PM applying
+from Seoul with EU work authorization, invented end to end for the demo. Copy
+each one, drop the `.example` from the name, then replace the contents with
+your own details:
 
 ```bash
 cp cv.example.md          cv.md
@@ -84,7 +85,8 @@ alone. Full example: [`cv.example.md`](cv.example.md).
 - ...
 
 ## Excluded titles (never match)
-- Junior, Associate, Intern, Lead, Director, VP, Head, Chief, Group, ...
+- Intern, Lead, Director, VP, Head, Chief, Group, ... (whatever levels you
+  don't want)
 
 ## Locations
 - Acceptable: <e.g., Netherlands, Germany, EU-remote, hybrid Berlin>
@@ -179,8 +181,9 @@ Sheet and register the scheduled task.
 ## 가장 빠른 시작: 예시 복사하기
 
 처음부터 직접 쓸 필요 없습니다. 이 폴더에는 **이미 채워진 예시 파일** 4개가
-들어 있습니다. 내용을 채운 인물은 베를린에 사는 모빌리티·여행 5년차 PM인데,
-데모용으로 처음부터 끝까지 창작한 가공 인물입니다. 각 파일을 복사해서 이름에서
+들어 있습니다. 내용을 채운 인물은 서울에서 EU 이직을 준비하는 여행·모빌리티
+3년차 PM(EU work authorization 보유)인데, 데모용으로 처음부터 끝까지 창작한
+가공 인물입니다. 각 파일을 복사해서 이름에서
 `.example`만 빼고 본인 내용으로 고치면 됩니다:
 
 ```bash
