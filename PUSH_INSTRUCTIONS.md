@@ -87,12 +87,14 @@ Open the repo in a browser and confirm:
   long-form writing — see note below).
 - `LICENSE` is the only place your author name appears.
 
-## What gets pushed (14 files)
+## What gets pushed (16 files)
 
 ```
 .gitignore
 LICENSE
 README.md
+README.ko-KR.md
+CHANGELOG.md
 PUSH_INSTRUCTIONS.md        (optional — delete if you don't want it public)
 setup.md
 scheduler-prompt-template.md

@@ -6,8 +6,12 @@
 > 아래 시트 ID는 가짜 자리표시자입니다.
 
 - Google Sheet ID: abcde-REPLACE-WITH-YOUR-OWN-SHEET-ID-12345
-- Sheet tabs: Jobs | Companies | PRD
+- Sheet tabs: Jobs | Companies
 - Email recipient: you@example.com
 - Email subject: Catch the fresh fish before jobs vanish
-- Schedule: 0 9 * * *   # 9 AM your timezone, daily
-- Career-memory folder (optional): ~/path/to/career-memory/
+- Schedule: 0 9 * * *   # daily at 9 AM your timezone — used when you REGISTER
+                        # the scheduled task; the prompt itself never reads it
+- Deep-scan weekday: Tuesday   # one day a week the run sweeps your Strong/Soft
+                               # companies (token budget raised that day)
+- Per-tier company cap: 8      # max companies checked per tier on the
+                               # deep-scan day (5-10 is a sensible range)
