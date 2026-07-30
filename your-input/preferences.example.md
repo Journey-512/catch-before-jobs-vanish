@@ -1,11 +1,19 @@
 # Preferences
 
-> ⚠️ EXAMPLE for the same made-up person as `cv.example.md` (a 3-year travel &
-> mobility PM, Seoul-based, EU work authorization). Copy this file to
-> `preferences.md` and edit it for yourself.
+> ⚠️ COPYABLE EXAMPLE for the same made-up person as `cv.example.md` (a 3-year
+> travel & mobility PM, Seoul-based, EU work authorization). Copy this file to
+> `preferences.md`, then use the table below to personalize or confirm its
+> values.
+>
 > `cv.example.md`와 같은 가공 인물(여행·모빌리티 3년차 PM, 서울 거주, EU work
-> authorization 보유)의 예시입니다. `preferences.md`로 복사한 뒤 본인에 맞게
-> 고치세요.
+> authorization 보유)의 복사용 예시입니다. `preferences.md`로 복사한 뒤 아래
+> 표에 따라 값을 수정하거나 확인하세요.
+
+| Action / 해야 할 일 | Fields / 항목 |
+|---|---|
+| **Personalize / 내 정보로 수정** | Target titles · Excluded titles · Locations · Work-hours timezone · Eligibility · Industries · Output language |
+| **Default — keep or change / 기본값 — 유지 또는 변경** | Maximum timezone difference: `4 hours` · Email cutoff: `70` |
+| **Keep as written / 그대로 유지** | Recency: `24 hours` (`7 days` for Aiming companies) · Score bands: Top `85+`, Strong `70-84` |
 
 ## Target titles (allowlist — exact)
 - Product Manager
@@ -13,14 +21,22 @@
 - Associate Product Manager
 - Product Owner
 - Senior Product Manager
-  (one level up on purpose — the rubric scores it as a stretch band, it is NOT
-  excluded)
+  (Included only because this fictional persona is targeting one level above;
+  the rubric scores it in the stretch band. This is not a universal default —
+  replace it with the one-level-up title for your level, or remove it.)
+  (이 가공 인물이 한 단계 높은 직무까지 지원하려고 넣은 값이며, rubric은
+  stretch band로 평가합니다. 모든 사용자에게 공통인 기본값이 아닙니다. 본인
+  기준의 한 단계 높은 직무명으로 바꾸거나 원하지 않으면 삭제하세요.)
 
 ## Excluded titles (never match)
 - Intern, Working Student, Lead, Principal, Staff, Director, VP, Head, Chief,
   Group
-  (Senior is intentionally NOT here — one-level-up titles go through and land
-  in the rubric's stretch band instead)
+  (Senior is omitted only because it is this persona's one-level-up target
+  above; putting it here would exclude it before scoring. Exclude the levels
+  you do not want in your own search.)
+  (Senior가 제외 목록에 없는 것도 위 가공 인물의 선택일 뿐입니다. 여기에
+  넣으면 채점 전에 제외됩니다. 본인 검색에서 원하지 않는 레벨을 직접
+  적으세요.)
 
 ## Locations
 - Acceptable: Netherlands, Germany, EU-remote, hybrid in an EU city (Berlin,

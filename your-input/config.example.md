@@ -1,22 +1,19 @@
 # Config
 
-> ⚠️ COPYABLE TEMPLATE. Copy this file to `config.md`, then:
-> 1. **Replace before running:** Google Sheet ID, email recipient, alert
->    schedule, and alert timezone.
-> 2. **Review and adjust:** email subject, deep-scan weekday, per-tier company
->    cap, and all Company discovery settings.
-> 3. **Keep exactly:** `Sheet tabs: Jobs | Companies`.
-> Replace every value in angle brackets. Values left below are deliberate
-> defaults and can stay unless you want different behavior.
+> ⚠️ COPYABLE TEMPLATE. Copy this file to `config.md`, then use the table
+> below. Replace every value in angle brackets before the first run; values
+> left below are deliberate defaults and can stay unless you want different
+> behavior.
 >
-> 복사해서 쓰는 템플릿입니다. `config.md`로 복사한 뒤:
-> 1. **실행 전 반드시 교체:** 구글 시트 ID, 이메일 수신자, 알림 일정, 알림
->    시간대.
-> 2. **내 상황에 맞는지 확인:** 이메일 제목, 딥스캔 요일, tier당 회사 상한,
->    Company discovery 설정 전체.
-> 3. **그대로 유지:** `Sheet tabs: Jobs | Companies`.
-> 꺾쇠괄호 안의 값은 모두 교체하세요. 나머지 값은 의도적으로 넣어 둔
-> 기본값이므로, 다른 동작을 원하지 않는다면 그대로 써도 됩니다.
+> 복사해서 쓰는 템플릿입니다. `config.md`로 복사한 뒤 아래 표를 따르세요.
+> 첫 실행 전에 꺾쇠괄호 안의 값은 모두 교체하세요. 나머지 값은 의도적으로
+> 넣어 둔 기본값이므로, 다른 동작을 원하지 않는다면 그대로 써도 됩니다.
+
+| Action / 해야 할 일 | Fields / 항목 |
+|---|---|
+| **Replace before running / 실행 전 반드시 교체** | Google Sheet ID · Email recipient · Alert schedule · Alert timezone |
+| **Review and adjust / 확인 후 조정** | Email subject · Deep-scan weekday · Per-tier company cap · Auto-add newly discovered companies · Minimum company maturity · Accepted industry match |
+| **Keep exactly / 그대로 유지** | `Sheet tabs: Jobs \| Companies` |
 
 - Google Sheet ID: <YOUR_GOOGLE_SHEET_ID>
 - Sheet tabs: Jobs | Companies
