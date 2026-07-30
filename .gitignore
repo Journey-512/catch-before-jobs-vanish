@@ -4,12 +4,15 @@
 
 # === your-input/ folder — designated drop-zone for personal data ===
 # Everything inside is gitignored EXCEPT the README that explains what to put here.
-# Drop your CV, preferences, target-companies, etc. into this folder.
+# Drop your CV, preferences, and run config into this folder. (Your company
+# list lives in the Google Sheet's Companies tab, not in a local file.)
 your-input/*
 !your-input/.gitkeep
 !your-input/README.md
-# Example files are committed so newcomers can copy them; your real cv.md /
-# preferences.md / companies.md / config.md stay ignored.
+# Example files are committed: two to copy (preferences / config) plus two
+# references (cv.example.md shows a converted cv.md; companies.example.md
+# shows the Companies tab). Your real cv-original.md / cv.md /
+# preferences.md / config.md stay ignored.
 !your-input/*.example.md
 
 # Personal memory / career artifacts (your local life)

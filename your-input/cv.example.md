@@ -1,10 +1,17 @@
 # CV summary (for fit scoring)
 
-> ⚠️ This is an EXAMPLE for a made-up person (a 3-year travel & mobility PM).
-> Every company, number, and claim below is invented. Copy this file to `cv.md`
-> and replace everything with your own details.
-> 예시용 가공 인물입니다 (여행·모빌리티 3년차 PM). 회사·수치·경험 전부 창작입니다.
-> `cv.md`로 복사한 뒤 본인 내용으로 전부 바꾸세요.
+> ⚠️ REFERENCE, not a form to fill in. This shows what a converted `cv.md`
+> looks like, using a made-up person (a 3-year travel & mobility PM) — every
+> company, number, and claim is invented. Don't copy this file and rewrite
+> it: paste your existing CV into `cv-original.md` and use the conversion
+> request in `setup.md` (or `your-input/README.md`) to generate your own
+> `cv.md`. Never let any fact from this example land in your real `cv.md`.
+> 참고용이지 채워 넣는 양식이 아닙니다. 변환된 `cv.md`가 어떤 모습인지 가공
+> 인물(여행·모빌리티 3년차 PM)로 보여주는 예시이며, 회사·수치·경험 전부
+> 창작입니다. 이 파일을 복사해 고쳐 쓰지 마세요. 기존 이력서를
+> `cv-original.md`에 붙여넣고 `setup.md`(또는 `your-input/README.md`)의 변환
+> 요청문으로 본인 `cv.md`를 만드세요. 이 예시의 사실이 실제 `cv.md`에
+> 들어가면 안 됩니다.
 
 ## Positioning
 A consumer product manager with 3 years across Korean travel booking and

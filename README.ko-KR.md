@@ -82,24 +82,30 @@ Claude **Cowork**와 다음 세 가지 connector(내 계정의 다른 서비스�
 1. **저장소를 받습니다.** `git clone`을 사용하거나 GitHub에서 Code → Download
    ZIP을 선택해 원하는 폴더에 압축을 풉니다.
 2. **구글 시트를 만듭니다.** `Jobs`와 `Companies`라는 탭 두 개를 만들고,
-   주소창에서 시트 ID를 복사해 둡니다. 각 탭에 필요한 열은
+   주소창에서 시트 ID를 복사해 둡니다. 관심 회사는 `Companies` 탭에 직접
+   입력합니다 — 이 탭이 회사 목록의 유일한 원본입니다 (형식 참고:
+   [`your-input/companies.example.md`](your-input/companies.example.md)).
+   각 탭에 필요한 열은
    [setup.md 2단계](setup.md#2단계--구글-시트-만들기)에 정리되어 있습니다.
 3. **예시 프로필을 내 정보로 바꿉니다.** [`your-input/`](your-input)에는
-   여행·모빌리티 분야의 가상 PM을 기준으로 완성해 둔 예시 파일 네 개가 들어
-   있습니다. 각 파일을 복사해 이름에서 `.example`을 제거한 뒤 본인 내용으로
+   여행·모빌리티 분야의 가상 PM을 기준으로 만든 예시 파일이 들어 있습니다.
+   그중 두 개를 복사해 이름에서 `.example`을 제거한 뒤 본인 내용으로
    수정합니다.
 
-   - `cv.md` — 경력과 성과, 강점, 도메인 경험, skill별 실제 숙련 수준
    - `preferences.md` — 원하는 직무·지역·산업, 제외 조건, 지원 자격, 이메일
-     기준 점수
-   - `companies.md` — 관심 회사, 현재 집중하는 Aiming 회사, 새 회사 자동 추가
-     기준
-   - `config.md` — 구글 시트 ID, 이메일 주소, 실행 시각, deep-scan 요일
+     기준 점수, 그리고 remote 공고 판정에 쓰는 근무 시간대
+   - `config.md` — 구글 시트 ID, 이메일 주소, 알림 일정과 알림 시간대,
+     deep-scan 요일, 새 회사 자동 추가 여부
 
-   앞에서 복사한 시트 ID는 `config.md`에 붙여넣습니다. Skill calibration은
-   에이전트에게 CV 기반 초안을 요청해도 되지만, 실제 경험보다 높게 평가되지
-   않도록 최종 내용은 직접 확인합니다. 이 네 파일은 `.gitignore`에 포함되므로
-   사용자의 실제 CV와 설정이 GitHub에 올라가지 않습니다.
+   `cv.md`는 복사가 아니라 생성합니다: 기존 이력서의 텍스트를
+   `your-input/cv-original.md`에 붙여넣고 에이전트에게 한 번 변환을 맡긴 뒤
+   결과를 직접 검토합니다 — 복사해 쓸 변환 요청문과 검토 체크리스트는
+   [setup.md 3단계](setup.md#3단계--your-input-채우기)에 있습니다. 나머지
+   예시는 복사하지 않는 참고 자료입니다: `cv.example.md`는 생성된 `cv.md`가
+   어떤 모습인지, `companies.example.md`는 `Companies` 탭의 형식(위 2번)을
+   보여줍니다. 앞에서 복사한 시트 ID는 `config.md`에 붙여넣습니다. 여기의
+   개인 파일은 전부 `.gitignore`에 포함되므로 사용자의 실제 CV와 설정이
+   GitHub에 올라가지 않습니다.
 4. **에이전트에 파이프라인을 연결합니다.** Claude Code에서는 아래 두 명령으로
    `job-alert` skill을 설치합니다.
 
@@ -158,11 +164,11 @@ Claude **Cowork**와 다음 세 가지 connector(내 계정의 다른 서비스�
 
 ```mermaid
 flowchart LR
-  A["1 · 설정 읽기<br/>CV · 선호 조건<br/>관심 회사 · 실행 설정"] --> B["2 · 후보 수집<br/>검색 · 날짜 정리<br/>하드 필터 · 중복 제거"] --> C["3 · 적합도 평가<br/>JD 요구사항 채점<br/>후처리 · 열림 확인"] --> D["4 · 기록과 알림<br/>구글 시트 기록<br/>이메일 · 실행 결과"]
+  A["1 · 설정 읽기<br/>CV · 선호 조건 · 실행 설정<br/>+ Companies 탭"] --> B["2 · 후보 수집<br/>검색 · 날짜 정리<br/>하드 필터 · 중복 제거"] --> C["3 · 적합도 평가<br/>JD 요구사항 채점<br/>후처리 · 열림 확인"] --> D["4 · 기록과 알림<br/>구글 시트 기록<br/>이메일 · 실행 결과"]
 ```
 
-먼저 [`your-input/`](your-input)의 네 파일을 읽고, LinkedIn·Indeed와 관심
-회사 채용 페이지에서 후보를 수집합니다. 제목·지역·언어처럼 공고 목록에서 바로
+먼저 [`your-input/`](your-input)의 세 파일과 구글 시트의 `Companies` 탭을
+읽고, LinkedIn·Indeed와 관심 회사 채용 페이지에서 후보를 수집합니다. 제목·지역·언어처럼 공고 목록에서 바로
 판단할 수 있는 조건과 과거 이력을 먼저 확인한 뒤, 살아남은 공고만 전체 JD를
 열어 채점합니다. 이렇게 비용이 적은 판단부터 처리해 불필요한 탐색과 분석을
 줄입니다.
@@ -176,9 +182,12 @@ flowchart LR
 공통 동작 방식은 [`skills/job-alert/SKILL.md`](skills/job-alert/SKILL.md)와
 [채점 기준표](skills/job-alert/fit-scoring-rubric.md)에 버전으로 관리됩니다
 (한국어 안내: [`docs/skill.ko-KR.md`](docs/skill.ko-KR.md)). 사용자의 경력과
-선호 조건은 [`your-input/`](your-input)에서만 읽고, 구글 시트에는 규칙이
-아니라 실행 결과만 쌓습니다. 따라서 공통 로직을 건드리지 않고도 자신의
-CV·지원 조건·관심 회사만 수정해 파이프라인을 개인화할 수 있습니다.
+선호 조건은 [`your-input/`](your-input)에서 읽고, 관심 회사 목록은 구글
+시트의 `Companies` 탭에서 읽습니다. `Companies` 탭은 파이프라인이 매 실행
+확인하고 새로 발견한 회사를 추가하기도 하는 회사 registry이며, 사용자가 직접
+적은 값은 덮어쓰지 않습니다. `Jobs` 탭에는 공고 이력과 지원 결과가 쌓입니다.
+따라서 공통 로직을 건드리지 않고도 자신의 CV·지원 조건·`Companies` 탭만
+수정해 파이프라인을 개인화할 수 있습니다.
 
 실제 운영 중 발견한 문제를 막기 위해 다음 안전장치를 적용합니다.
 
@@ -216,9 +225,12 @@ catch-before-jobs-vanish/
 ├── .claude-plugin/                  Claude Code 플러그인 설치용 설정 파일
 ├── docs/
 │   └── skill.ko-KR.md               파이프라인 동작의 한국어 안내
-├── your-input/                      CV·선호 조건·관심 회사·실행 설정의 개인 입력 영역 (gitignore — 예시만 공개)
-│   ├── README.md                    네 파일에 무엇을 어떻게 채우는지 안내
-│   └── *.example.md                 가공 인물로 완성해 둔 예시 4파일 — 복사해서 수정
+├── your-input/                      CV·선호 조건·실행 설정의 개인 입력 영역 (gitignore — 예시만 공개)
+│   ├── README.md                    각 파일에 무엇을 어떻게 채우는지 안내
+│   ├── companies.example.md         Companies 탭 입력 참고 예시 — 복사하지 않음
+│   ├── config.example.md            config.md로 복사
+│   ├── cv.example.md                생성된 cv.md의 모습 — 참고용, 복사하지 않음
+│   └── preferences.example.md       preferences.md로 복사
 ├── LICENSE                          MIT
 └── .gitignore                       실제 개인 파일이 저장소에 커밋되지 않게 막음
 ```
@@ -249,8 +261,8 @@ JD와 CV만으로 알 수 없는 요인에도 영향을 받습니다. 점수가 
 **내 CV와 지원 기록은 어디에 저장되나요?**
 
 CV와 개인 설정은 로컬 저장소의 `your-input/`에 보관되며 GitHub에 커밋되지
-않습니다. 공고와 지원 기록은 사용자의 구글 시트에, 알림은 사용자의 Gmail
-계정에만 남습니다. 이 프로젝트를 만든 사람이 운영하는 별도 서버는 없으며
+않습니다. 관심 회사 목록과 공고·지원 기록은 사용자의 구글 시트에, 알림은
+사용자의 Gmail 계정에만 남습니다. 이 프로젝트를 만든 사람이 운영하는 별도 서버는 없으며
 사용자의 데이터에 접근하지 않습니다. 다만 AI 에이전트와 연결 서비스가
 데이터를 처리하는 방식은 각 서비스의 설정과 정책을 따릅니다.
 

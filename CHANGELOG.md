@@ -7,6 +7,74 @@ the version history is part of the product here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versions track generations of
 the pipeline logic.
 
+## [3.2.0] — 2026-07-30
+
+Three input-and-setup changes, zero scoring-logic change. (1) One list, two
+homes — resolved: the company watchlist lived in a local Markdown file
+(`companies.md`) while auto-added companies landed in the Sheet's
+`Companies` tab, free to drift apart silently; the tab is now the single
+source of truth. (2) The alert clock and the remote-work clock are now two
+explicit, separate settings. (3) `cv.md` is now converted once from your
+real CV instead of being rewritten from the example.
+
+### Changed
+
+- **The `Companies` tab is the company registry.** Every run starts by
+  reading it: the company list, `Aiming` flags, `Match Level`, careers
+  URLs, and memos all come from the tab, and it drives company-scoped
+  search, the Aiming checks, the weekly deep scan, and the "already
+  registered?" check. The pipeline appends auto-added rows (which join the
+  searches from the next run) and never overwrites values you typed. If
+  the tab can't be read, the run skips company-scoped searching and
+  auto-add, keeps the generic searches, and says so in the email; an
+  empty tab is not an error.
+- **Local runtime inputs cut to three files** — `cv.md`, `preferences.md`,
+  `config.md`. A local `companies.md` is no longer read.
+- **Auto-add policy moved into `config.md`** — a new Company discovery
+  section (auto-add on/off, minimum company maturity, accepted industry
+  match). A config without the section behaves like before: auto-add on,
+  default maturity bar.
+- **`companies.example.md` repurposed, not deleted** — it is now the
+  format reference for filling the `Companies` tab, no longer a file you
+  copy locally.
+- **Two timezones, split by role.** `config.md` gains an Alert delivery
+  section: `Alert schedule` in plain language ("Daily at 09:00" — no cron)
+  and `Alert timezone` in Region/City form, which governs the run's
+  "today", the deep-scan weekday check, `Date Added`, and email/report
+  times. `preferences.md`'s `Home timezone` + `Remote anchor rule` became
+  a Remote-work compatibility section: `Work-hours timezone` + `Maximum
+  timezone difference` (default 4 hours), used only to judge remote roles.
+  The two may hold the same value but are never merged — the demo persona
+  gets alerts in Asia/Seoul and will work in Europe/Berlin. The pipeline
+  never reads `Alert schedule` to create or change a schedule: the trigger
+  lives in your agent's scheduled task, and editing `config.md` does not
+  update an already-registered task.
+- **CV onboarding: convert, don't rewrite.** You paste your existing CV
+  into `cv-original.md` (private; the daily run never reads it) and
+  convert it once into the scoring file `cv.md` with a provided request,
+  then review it before the first scheduled run. `cv.example.md` is now a
+  format reference for the converted output, not a copy target — only
+  `preferences.example.md` and `config.example.md` get copied.
+
+### Upgrade note
+
+Your old `your-input/companies.md` is not read anymore — and nothing
+deletes it. Move its rows into the `Companies` tab (Name → Company,
+careers URL → URL, Match level → Match Level, Aiming → Aiming,
+note → Memo), fill the remaining columns only where you know the value,
+and verify the tab against the file before deciding yourself whether to
+keep or delete it.
+
+Two renames if your files predate this version: in `config.md`,
+`Schedule:` (cron) becomes `Alert schedule:` (plain language) plus
+`Alert timezone:`; in `preferences.md`, `Home timezone` + `Remote anchor
+rule` become `Work-hours timezone` + `Maximum timezone difference`. The
+run stops and names the field when the new ones are missing (a missing
+`Alert schedule` alone never blocks a manual run; a missing `Maximum
+timezone difference` falls back to 4 hours). An existing, reviewed
+`cv.md` stays valid — no `cv-original.md` needed — and your personal
+files are never edited automatically.
+
 ## [3.1.1] — 2026-07-30
 
 One rule promoted from a production incident the same day: a sheet write
@@ -166,6 +234,69 @@ company watchlist with a quality gate; draft-then-send email.
 버전 이력 자체가 제품의 일부입니다. 형식은
 [Keep a Changelog](https://keepachangelog.com/)를 따르고, 버전 번호는
 파이프라인 로직의 세대를 나타냅니다.
+
+## [3.2.0] — 2026-07-30
+
+입력·설정 변경 3가지이고 채점 로직 변경은 없습니다. (1) 회사 목록이 두
+곳에 나뉘어 있던 문제를 정리했습니다: 관심 회사 목록은 로컬 Markdown
+파일(`companies.md`)에 있는데 자동 추가된 회사는 시트의 `Companies` 탭에
+쌓여 조용히 어긋날 수 있었습니다 — 이제 탭이 유일한 원본입니다. (2) 알림 시계와 원격근무 시계를 명시적인
+별도 설정으로 분리했습니다. (3) `cv.md`는 예시를 고쳐 쓰는 방식에서 본인
+이력서를 한 번 변환하는 방식으로 바뀌었습니다.
+
+### 바뀐 것
+
+- **`Companies` 탭이 회사 registry가 됐습니다.** 매 실행이 이 탭을 읽는
+  것으로 시작합니다. 회사 목록, `Aiming` 표시, `Match Level`, careers URL,
+  메모를 전부 탭에서 가져오고, 회사별 검색·Aiming 검색·주간 딥스캔·"이미
+  등록된 회사인가" 확인의 기준이 됩니다. 파이프라인은 새 회사 행을
+  추가하기도 하며(다음 실행부터 검색 대상), 사용자가 직접 적은 값은
+  덮어쓰지 않습니다. 탭을 못 읽은 실행은 회사별 검색과 자동 추가를 건너뛰고
+  일반 검색만 계속하며 그 사실을 이메일에 밝힙니다. 빈 탭은 오류가
+  아닙니다.
+- **런타임 로컬 입력이 3개 파일로 줄었습니다** — `cv.md` · `preferences.md`
+  · `config.md`. 로컬 `companies.md`는 더 이상 읽지 않습니다.
+- **자동 추가 설정이 `config.md`로 옮겨졌습니다** — Company discovery
+  섹션(자동 추가 여부 · 회사 성숙도 기준 · 허용 산업 분류)이 새로
+  생겼습니다. 이 섹션이 없는 구버전 config는 예전과 같이 동작합니다
+  (자동 추가 켜짐 + 기본 성숙도 기준).
+- **`companies.example.md`는 삭제가 아니라 개편입니다** — 로컬로 복사하는
+  파일에서, `Companies` 탭의 입력 형식을 보여주는 참고 자료로 바뀌었습니다.
+- **시간대 2종을 역할로 분리했습니다.** `config.md`에 Alert delivery 섹션이
+  생겼습니다: cron 대신 자연어로 적는 `Alert schedule`("Daily at 09:00")과
+  지역/도시 형식의 `Alert timezone`. Alert timezone이 실행의 "오늘", 딥스캔
+  요일 판정, `Date Added`, 이메일·리포트 시각을 맡습니다. `preferences.md`의
+  `Home timezone`과 `Remote anchor rule`은 Remote-work compatibility
+  섹션(`Work-hours timezone` + `Maximum timezone difference`, 기본
+  4시간)이 됐고 remote 공고 판정에만 쓰입니다. 두 값이 같을 수는 있어도
+  합치지 않습니다 — 가공 인물은 알림은 Asia/Seoul, 근무는 Europe/Berlin
+  기준입니다. 파이프라인이 `Alert schedule`을 읽어 예약을 만들거나 바꾸는
+  일은 없습니다: 실행 트리거는 에이전트의 예약 작업에 있고, `config.md`를
+  고쳐도 이미 등록된 예약은 바뀌지 않습니다.
+- **CV 온보딩: 다시 쓰지 않고 변환합니다.** 기존 이력서를
+  `cv-original.md`에 붙여넣고(비공개, 매일 실행은 읽지 않음) 제공된
+  요청문으로 채점용 `cv.md`를 한 번 변환한 뒤, 첫 예약 실행 전에 직접
+  검토합니다. `cv.example.md`는 변환 결과의 형식 참고 자료가 됐고 복사
+  대상이 아닙니다 — 복사하는 예시는 `preferences.example.md`와
+  `config.example.md` 둘뿐입니다.
+
+### 업그레이드 안내
+
+예전 `your-input/companies.md`는 더 이상 읽히지 않습니다 — 그리고 시스템이
+지우지도 않습니다. 행을 `Companies` 탭으로 옮기고 (Name → Company, careers
+URL → URL, Match level → Match Level, Aiming → Aiming, note → Memo), 나머지
+열은 확실히 아는 값만 채운 뒤, 옮긴 내용이 빠짐없는지 시트에서 확인하고 원래
+파일의 보관·삭제는 직접 결정하세요.
+
+구버전 파일이라면 이름을 바꿀 설정이 2가지 있습니다. `config.md`의
+`Schedule:`(cron)은 `Alert schedule:`(자연어) + `Alert timezone:`으로,
+`preferences.md`의 `Home timezone`과 `Remote anchor rule`은 `Work-hours
+timezone`과 `Maximum timezone difference`로 바꿉니다. 새 필드가 없으면
+실행이 멈추고 어떤 필드가 문제인지 알려줍니다 (`Alert schedule`만 없는
+경우는 수동 실행을 막지 않고, `Maximum timezone difference`가 없으면 기본
+4시간으로 동작합니다). 이미 검토를 마친 `cv.md`는 그대로 유효하며
+`cv-original.md`를 만들 필요 없습니다. 개인 파일을 시스템이 자동으로 고치는
+일은 없습니다.
 
 ## [3.1.1] — 2026-07-30
 

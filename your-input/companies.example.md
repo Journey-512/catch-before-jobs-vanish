@@ -1,34 +1,47 @@
-# Target companies
+# `Companies` tab — input reference
 
-> ⚠️ EXAMPLE. The companies below are well-known European consumer brands used
-> only to show the format — they are NOT endorsements, and NOT anyone's real
-> target list. Copy this file to `companies.md` and put your own list in.
-> 예시입니다. 아래 회사는 형식을 보여주려고 넣은 유럽 소비자 브랜드일 뿐,
-> 추천(endorsement)도, 누군가의 실제 타겟 목록도 아닙니다. `companies.md`로 복사한 뒤 본인 목록으로
-> 바꾸세요.
+> ⚠️ REFERENCE, not an input file. This file shows how to fill in the
+> `Companies` tab of your Google Sheet — the single source of truth for your
+> company list. Do NOT copy it to a local `companies.md`: the pipeline never
+> reads a local companies file. It is also not a CSV, and you don't need to
+> create one — you type rows straight into the Sheet.
+> 참고용이지 입력 파일이 아닙니다. 이 파일은 회사 목록의 유일한 원본인 구글
+> 시트 `Companies` 탭을 채우는 방법을 보여줍니다. 로컬 `companies.md`로
+> 복사하지 마세요 — 파이프라인은 로컬 회사 파일을 읽지 않습니다. CSV도
+> 아니고 별도의 CSV를 만들 필요도 없습니다 — 행은 시트에 직접 입력합니다.
 
-## Whitelist
-One company per line.
-`Name | careers URL (optional) | Match level (Strong/Soft) | Aiming | note (optional)`
+## The 9-column contract
 
-- GetYourGuide | | Strong | Aiming | activities marketplace — closest to my travel core
-- Booking.com | https://careers.booking.com/ | Strong | |
-- FlixBus | | Strong | | intercity travel, operations-heavy
-- Bolt | https://bolt.eu/en/careers/ | Strong | | ride-hailing + rentals — my APM year domain
-- Doctolib | | Soft | | health tech (Soft industry)
-- Personio | | Soft | | B2B SaaS — internal tooling adjacency
+The tab's header row, in this exact order:
 
-## Aiming (manual flag)
-`Aiming` marks the one to three companies you are actively gunning for right
-now. Set it BY HAND only — the system never sets it (auto-added rows always
-leave it blank). An Aiming company gets a wider net every run: a 7-day window
-instead of 24h, the extended locations from `preferences.md`, and a direct
-careers-page check.
+| Index | Company | Aiming | Match Level | URL | Source site | HQ | Topics | Memo |
+|---|---|---|---|---|---|---|---|---|
+| 1 | `<Company name>` | `<Aiming or blank>` | `<Strong or Soft>` | `<careers URL or blank>` | `<source or blank>` | `<HQ or blank>` | `<topics or blank>` | `<note or blank>` |
 
-## Auto-add rule
-When a qualifying posting comes from a company NOT on this list, add it if:
-- Quality gate: late-stage for its market — e.g. Series C+, listed, or
-  clearly established. (This is the maturity bar the pipeline reads; tune the
-  wording to your market.) AND
-- Industry matches a Strong or Soft topic in `preferences.md`.
-Every auto-add is flagged in the email so you can veto it.
+One row per company. A row with an empty `Company` cell is not treated as a
+company. For the optional columns, blank beats a guess — fill them only
+where you actually know the value.
+
+## What the columns mean
+
+- **`Aiming`** — a hand-set flag for the 1-3 companies you're actively
+  gunning for right now. An Aiming company gets a wider net every run: a
+  7-day window instead of 24h, the extended locations from
+  `preferences.md`, and a direct careers-page check. The system never sets
+  this flag — auto-added rows always leave it blank.
+- **`Match Level`** — `Strong` or `Soft`, mirroring the industry classes in
+  `preferences.md`. It sets the sweep order on the weekly deep-scan day.
+- **`URL`** — the careers page, if you know it. The pipeline uses it for
+  direct checks and falls back to job boards when it is blank or broken.
+- **`Index` / `Source site` / `HQ` / `Topics` / `Memo`** — bookkeeping: a
+  running number, where the company was found, headquarters, industry
+  keywords, and free-form notes.
+
+## Auto-add
+
+The pipeline can register new companies it discovers by appending rows to
+this tab (Aiming left blank, Memo noting "Auto-added" and the date); those
+rows join the company searches from the next run. Whether auto-add is on,
+and the maturity bar a new company must clear, are settings in `config.md`
+— see [`config.example.md`](config.example.md). Existing rows are never
+modified: what you typed stays yours.

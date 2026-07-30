@@ -11,8 +11,8 @@ When this skill is invoked, execute the pipeline in the block below end to end.
 
 ```text
 You are running the daily job-alert routine for the "catch-before-jobs-vanish"
-system. Today is the current date. Work autonomously end to end and produce one
-email.
+system. Today is the current date in the Alert timezone (config.md). Work
+autonomously end to end and produce one email.
 
 The pipeline is 10 steps in 4 layers. Steps 0-7 write NOTHING (if the run dies
 there, nothing is half-done); all writes happen in steps 8-9. Each rule lives in
@@ -26,27 +26,73 @@ re-decide.
 - Error principle: finish the run even if you must drop a source, disclose what
   you dropped, and never fail silently.
 
-## [Input] Step 0 — Load configuration (single source of truth)
-Read these four files from the repo's your-input/ folder
+## [Input] Step 0 — Load configuration
+Read these three files from the repo's your-input/ folder
 (repo path: <REPLACE WITH YOUR LOCAL REPO PATH>/your-input/):
   - cv.md          -> career evidence for scoring + its "Skill calibration"
-                      section (Core / Transferable with caps / Gap).
+                      section (Core / Transferable with caps / Gap). This is
+                      the converted, owner-reviewed scoring file — the raw
+                      cv-original.md it was distilled from is never read at
+                      runtime.
   - preferences.md -> target titles, excluded titles, locations (+ extended
                       locations for Aiming companies), industries, recency
-                      window, email cutoff, home timezone, output language,
-                      and the Eligibility section (knockout conditions:
-                      languages you work in, work authorization).
-  - companies.md   -> target-company list with Match Level (Strong/Soft), the
-                      manual "Aiming" flag, per-company notes, auto-add rule.
-  - config.md      -> Sheet ID, email recipient, email subject, deep-scan
-                      weekday (default Tuesday), per-tier company cap.
+                      window, email cutoff, the Remote-work compatibility
+                      settings (Work-hours timezone; Maximum timezone
+                      difference, default 4 hours when absent), output
+                      language, and the Eligibility section (knockout
+                      conditions: languages you work in, work authorization).
+  - config.md      -> Sheet ID, email recipient, email subject, Alert
+                      timezone, deep-scan weekday (default Tuesday),
+                      per-tier company cap, and
+                      the Company discovery settings (auto-add on/off,
+                      minimum company maturity, accepted industry match).
+                      If the Company discovery section is absent (a config
+                      from an earlier version), continue with auto-add ON
+                      and the default maturity bar ("Series C+, listed, or
+                      clearly established") — the pre-3.2 behavior.
 If any file is missing, stop and report which one — do not guess.
-These four files plus this template are the ONLY rule sources. The Sheet
-holds records, never rules — a second rule surface is how half-updated
-rules rot silently.
-Compute today's flags (e.g. is today the deep-scan day?). The deep-scan
-weekday is read here and ONLY here; every rule below says "deep-scan day",
-never a weekday name.
+Then read the Companies tab of the Sheet: the header row and every company
+row. The tab is the single source of truth for the company list and all
+per-company attributes — the Aiming flags, Match Level (Strong/Soft),
+careers URLs, and per-company memos used below all come from this read;
+no company data lives in a local file. Skip rows whose Company cell is
+blank or unparseable and count them for the run report. Rows auto-added
+by an earlier run count like any hand-written row.
+Data ownership, so nothing is looked for in the wrong place: this template
+holds the fixed logic; cv.md / preferences.md / config.md hold your local
+settings; the Companies tab is the company registry (read every run,
+appended to only in Step 8, your hand-typed values never overwritten);
+the Jobs tab is posting history — dedup evidence, system statuses, and
+the application outcomes you type.
+If the Companies tab cannot be read, or its header does not match the
+9-column contract (listed in Step 8): skip the Aiming, company-scoped,
+and deep-scan searches this run — the generic LinkedIn/Indeed searches
+built from preferences.md still run — and do NOT auto-add companies this
+run (without the tab, "is this company already registered?" cannot be
+answered safely). Never guess a company list or reuse one remembered
+from an earlier run. Disclose the skipped scope and the reason in the
+email and run report.
+A readable tab with zero company rows is NOT an error: generic search
+continues, and auto-add (if enabled) may register qualifying companies
+from today's findings. The run report then states both facts separately:
+zero companies configured at run start, and how many were newly added.
+Two timezones, never interchangeable (both in Region/City form, e.g.
+Asia/Seoul): the Alert timezone (config.md) governs everything clock-like
+in a run — today's date, the deep-scan weekday comparison, converting
+timestamps to dates, Date Added values, and any times in the email or run
+report. The Work-hours timezone (preferences.md) is used ONLY to judge
+remote roles against the Maximum timezone difference. Never use one for
+the other's job. Freshness math stays rolling 24 hours from now, not a
+calendar-day window. If the Alert timezone or Work-hours timezone is
+missing or uninterpretable — including a file that still uses a pre-3.2
+field name for these settings — do not guess and do not silently read the
+old field: stop and name the broken field. The config's Alert schedule
+line is different: it exists for you and your scheduler at registration
+time, the pipeline never reads it to create or change a schedule, and a
+missing Alert schedule never blocks a manual run.
+Compute today's flags in the Alert timezone (e.g. is today the deep-scan
+day?). The deep-scan weekday is read here and ONLY here; every rule below
+says "deep-scan day", never a weekday name.
 Run cadence (once daily, at what time) lives in your scheduler, not here.
 
 ## [Retrieval] Steps 1-4 — who are today's candidates
@@ -58,10 +104,12 @@ Run cadence (once daily, at what time) lives in your scheduler, not here.
   permalinks (jobs/view/{id}). NEVER save a search URL — it is a moving 24h
   window. Do NOT trust the auto-selected currentJobId; parse the full result
   list and match by company + title.
-- Aiming companies (flagged in companies.md) get a wider net: time window 24h
-  first, then widen to 7 days; also collect the extended locations from
-  preferences.md; and check their careers page directly every run.
-- Company-scoped search: prefer the job board's company filter; careers page
+- Aiming companies (flagged in the Companies tab read in Step 0) get a wider
+  net: time window 24h first, then widen to 7 days; also collect the extended
+  locations from preferences.md; and check their careers page directly every
+  run.
+- Company-scoped search (targets and careers URLs from the Companies tab):
+  prefer the job board's company filter; the recorded careers page
   as backup. Use only verified filters — a wrong company-filter ID fails
   SILENTLY (an empty result, not an error) — and never conclude "no jobs"
   from an empty filter result: cross-check with a keyword search filtered
@@ -72,11 +120,13 @@ Run cadence (once daily, at what time) lives in your scheduler, not here.
   the job boards for that company and disclose the coverage gap — never let
   a dead recipe silently shrink coverage.
 - Deep-scan day: sweeping Strong-match companies (Tier 2) and Soft-match
-  companies (Tier 3) is MANDATORY — skip companies already seen in Tier 1,
-  cap companies per tier (config.md, default 5-10), and if budget runs short
+  companies (Tier 3) — Match Level per the Companies tab — is MANDATORY —
+  skip companies already seen in Tier 1,
+  cap companies per tier (config.md, default 8), and if budget runs short
   prioritize Aiming companies. On other days Tier 2/3 run budget-permitting.
 - Promoted/sponsored cards carry no timestamp: accept them only from
-  companies already on your list, and mark their Posted Date as an estimate.
+  companies already in the Companies tab, and mark their Posted Date as an
+  estimate.
 - Careers pages without dates: sort by date where possible; if the top of the
   list shows no target roles, stop early (cost control).
 - Never silently swallow a 404 or blocked source — finish with the sources
@@ -150,8 +200,9 @@ let the outcome loop judge empirically whether these convert.
   your real score distribution and adjust.
   Bands: Top >= 85 / Strong 70-84 / 60-69 recorded only / < 60 recorded only.
 - Location exclusions, two axes (marked for record, not emailed): (1)
-  countries on the excluded list, (2) remote roles anchored more than N
-  hours from your home timezone (default 4h; preferences.md).
+  countries on the excluded list, (2) remote roles anchored more than the
+  Maximum timezone difference (default 4 hours) from your Work-hours
+  timezone (both in preferences.md).
 - A location violation that only shows up inside the JD -> MARK it Excluded
   with the reason in the value — "Excluded (remote timezone)" for axis (2),
   "Excluded (location)" for axis (1) — kept out of the email; Step 8 writes
@@ -189,7 +240,7 @@ let the outcome loop judge empirically whether these convert.
   its target (e.g. one row off), silently overwriting a neighboring row.
   If it did, restore the overwritten data and redo the write before
   proceeding.
-- Jobs tab, 10 columns: Date Added ("YYYY-MM-DD HH:MM", your timezone) |
+- Jobs tab, 10 columns: Date Added ("YYYY-MM-DD HH:MM", Alert timezone) |
   Company | Job Title | Location | Source | Posted Date | Link | Status |
   Fit Score | Fit Reason.
 - Status vocabulary. System-written: "Excluded (remote timezone)",
@@ -206,10 +257,25 @@ let the outcome loop judge empirically whether these convert.
 - Companies tab, 9 columns: Index (max+1) | Company | Aiming (manual only —
   ALWAYS blank on auto-add) | Match Level | URL | Source site | HQ | Topics |
   Memo ("Auto-added YYYY-MM-DD").
-- Auto-add: a posting from a company not yet in the Companies tab is added
-  only if it passes the quality gate (a company-maturity bar per region and
-  market — thresholds in companies.md) AND the industry gate; every auto-add
-  is flagged in the email for veto.
+- Auto-add (only when config.md's Company discovery enables it, and never in
+  a run where Step 0 could not read the Companies tab): a posting from a
+  company not yet in the tab is added only if the company clears the maturity
+  bar (config.md: minimum company maturity) AND its industry matches a
+  preferences.md topic in a class config.md accepts (Strong or Soft). With
+  auto-add off, such postings are still scored and recorded in Jobs as
+  usual — the company just isn't registered.
+- Auto-add write rules: check "already in the tab?" with surrounding
+  whitespace and letter case normalized, but never rewrite the company name
+  as displayed in the sheet; a row with a blank Company cell is not a
+  company. Set Match Level to Strong or Soft according to which industry
+  class matched. Record the careers URL only if verified; likewise fill
+  Source site, HQ, and Topics only with confirmed information — leave blank
+  rather than guess. Memo records provenance ("Auto-added YYYY-MM-DD").
+  NEVER modify an existing row — its Aiming, Match Level, URL, and Memo are
+  the owner's. A company added this run counts for this run's posting
+  processing; it becomes a company-scoped search target from the next run,
+  when Step 0 reads it back. Every auto-add is flagged in the email for
+  veto.
 - Sort Jobs by Date Added descending — or skip sorting if the owner curates
   row order by hand.
 
@@ -223,11 +289,17 @@ let the outcome loop judge empirically whether these convert.
   always means breakage, never zero results).
 - If your mail tool only creates drafts: draft first, then send — a failed
   send leaves the draft as a safety net.
-- Email subject from config.md; email/report language from preferences.md.
+- Email subject from config.md; email/report language from preferences.md;
+  any times shown in the email or run report are in the Alert timezone.
 - Run report checklist (in the email or the run log): found N / emailed M /
-  auto-added K / drop reasons / liveness results / coverage gaps / deep-scan
-  and Aiming checks ran (y/n) / rows appended (y/n) / duplicates cleaned
-  (the Step 4 markings Step 8 executed).
+  auto-added K / companies loaded from the Companies tab at run start (state
+  it explicitly when zero; include the count of rows skipped as blank or
+  unparseable)
+  / drop reasons / liveness results / coverage gaps (including Aiming,
+  company-scoped, or deep-scan searches skipped because the Companies tab
+  was unreadable, with the reason) / deep-scan and Aiming checks ran (y/n) /
+  rows appended (y/n) / duplicates cleaned (the Step 4 markings Step 8
+  executed).
 - On the deep-scan day, append a funnel summary from the Status column:
   per score band x application path (cold vs referral), applications,
   CV-pass rate, and still-pending count — always with sample sizes (n).

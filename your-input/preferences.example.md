@@ -30,10 +30,14 @@
   never dropped)
 - Hard exclude: Americas-only remote (timezone), Asia / Australia remote
   (I'm moving to the EU — no point matching roles that keep me in this region)
-- Remote anchor rule: exclude remote roles anchored more than 4 hours from my
-  home timezone.
-- Home timezone: Europe/Berlin (my relocation target — remote roles are
-  judged against where I'll work, not against Seoul)
+
+## Remote-work compatibility
+
+- Work-hours timezone: Europe/Berlin (my relocation target — remote roles
+  are judged against where I'll work, not against Seoul, where I only
+  receive the alerts)
+- Maximum timezone difference: 4 hours (remote roles anchored further than
+  this from my work-hours timezone are excluded)
 
 ## Eligibility (knockout conditions — read by the hard gates, not the scorer)
 - Languages I work in: English, Korean.

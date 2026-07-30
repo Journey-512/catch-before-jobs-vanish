@@ -89,27 +89,34 @@ quick-start summary; the full walkthrough is [setup.md](setup.md).
 1. **Get the repo.** `git clone`, or Code → Download ZIP on GitHub and
    unzip it anywhere.
 2. **Create the Google Sheet.** Make two tabs named `Jobs` and `Companies`,
-   and copy the Sheet ID from the address bar. The columns each tab needs
-   are laid out in
+   and copy the Sheet ID from the address bar. Then enter your target
+   companies straight into the `Companies` tab — it is the single source of
+   truth for your watchlist
+   ([`your-input/companies.example.md`](your-input/companies.example.md)
+   shows the format). The columns each tab needs are laid out in
    [setup.md, Step 2](setup.md#step-2--create-the-google-sheet).
 3. **Replace the example profile with yours.** [`your-input/`](your-input)
-   ships four example files filled in for a fictional travel & mobility PM.
-   Copy each one, drop `.example` from the name, and edit in your details.
+   ships example files built around a fictional travel & mobility PM.
+   Copy two of them, drop `.example` from the name, and edit in your
+   details:
 
-   - `cv.md` — experience and results, strengths, domains, and how far
-     you've really gone with each skill
    - `preferences.md` — target titles, locations, industries, exclusions,
-     eligibility, and the email score threshold
-   - `companies.md` — your watchlist, the Aiming companies you're focused
-     on, and the auto-add rule for new companies
-   - `config.md` — the Sheet ID, your email, the run schedule, and the
-     deep-scan weekday
+     eligibility, the email score threshold, and the work-hours timezone
+     remote roles are judged against
+   - `config.md` — the Sheet ID, your email, the alert schedule and alert
+     timezone, the deep-scan weekday, and whether new companies get
+     auto-added
 
-   Paste the Sheet ID you copied into `config.md`. You can ask an agent to
-   draft the Skill calibration section from your CV, but confirm the final
-   list yourself so nothing gets rated above your real experience. All four
-   files are covered by `.gitignore`, so your real CV and settings never
-   reach GitHub.
+   Your `cv.md` is generated, not copied: paste your existing CV's text
+   into `your-input/cv-original.md`, have your agent convert it once into
+   the scoring file `cv.md`, and review the result yourself — the
+   copy-paste conversion request and review checklist are in
+   [setup.md, Step 3](setup.md#step-3--fill-in-your-input). The remaining
+   examples are references, not copy targets: `cv.example.md` shows what a
+   generated `cv.md` looks like, and `companies.example.md` shows the
+   `Companies` tab format (step 2). Paste the Sheet ID you copied into
+   `config.md`. All personal files here are covered by `.gitignore`, so
+   your real CV and settings never reach GitHub.
 4. **Hook the pipeline up to your agent.** In Claude Code, two commands
    install the `job-alert` skill:
 
@@ -168,11 +175,12 @@ The daily scheduled task works through ten steps, grouped into four stages:
 
 ```mermaid
 flowchart LR
-  A["1 · Read your files<br/>CV · preferences<br/>companies · config"] --> B["2 · Collect candidates<br/>search · normalize dates<br/>hard filters · dedup"] --> C["3 · Score fit<br/>grade JD requirements<br/>post-filter · liveness"] --> D["4 · Record and notify<br/>Sheet rows<br/>email · run report"]
+  A["1 · Read your inputs<br/>CV · preferences · config<br/>+ Companies tab"] --> B["2 · Collect candidates<br/>search · normalize dates<br/>hard filters · dedup"] --> C["3 · Score fit<br/>grade JD requirements<br/>post-filter · liveness"] --> D["4 · Record and notify<br/>Sheet rows<br/>email · run report"]
 ```
 
-It reads the four [`your-input/`](your-input) files first, then collects
-candidates from LinkedIn, Indeed, and your companies' careers pages. Cheap
+It reads the three [`your-input/`](your-input) files and the Sheet's
+`Companies` tab first, then collects candidates from LinkedIn, Indeed, and
+your companies' careers pages. Cheap
 checks come first — title, location, and language read straight off the
 listing, plus the match against past history — and only the surviving
 postings get their full JD opened and scored. Ordering the work by cost
@@ -189,9 +197,12 @@ The shared logic is versioned in
 [`skills/job-alert/SKILL.md`](skills/job-alert/SKILL.md) and the
 [rubric](skills/job-alert/fit-scoring-rubric.md) (Korean guide:
 [`docs/skill.ko-KR.md`](docs/skill.ko-KR.md)). Your career and preferences
-are read only from [`your-input/`](your-input), and the Sheet accumulates
-results, never rules — so you personalize the pipeline by editing your CV,
-criteria, and watchlist, without touching the shared logic.
+are read from [`your-input/`](your-input); your watchlist lives in the
+Sheet's `Companies` tab — a registry the pipeline reads every run and
+appends discoveries to, never overwriting what you typed — while the `Jobs`
+tab holds posting history and your application outcomes. So you personalize
+the pipeline by editing your CV, criteria, and the `Companies` tab, without
+touching the shared logic.
 
 Safeguards added against problems found in production:
 
@@ -231,9 +242,12 @@ catch-before-jobs-vanish/
 ├── .claude-plugin/                  config files for installing as a Claude Code plugin
 ├── docs/
 │   └── skill.ko-KR.md               Korean guide to how the pipeline works
-├── your-input/                      your personal input area — CV, preferences, watchlist, config (gitignored — only examples are public)
-│   ├── README.md                    what goes in each of the four files, and how
-│   └── *.example.md                 four example files completed for a fictional persona — copy and edit
+├── your-input/                      your personal input area — CV, preferences, config (gitignored — only examples are public)
+│   ├── README.md                    what goes in each file, and how
+│   ├── companies.example.md         reference for filling the Companies tab — never copied locally
+│   ├── config.example.md            copy to config.md
+│   ├── cv.example.md                what a generated cv.md looks like — reference, not copied
+│   └── preferences.example.md       copy to preferences.md
 ├── LICENSE                          MIT
 └── .gitignore                       keeps your real personal files out of the repo
 ```
@@ -265,8 +279,8 @@ record.
 **Where are my CV and application records stored?**
 
 Your CV and settings live in `your-input/` in your local repo and are never
-committed to GitHub. Postings and application records stay in your Google
-Sheet, and alerts in your Gmail account. The author runs no server and has
+committed to GitHub. Your company watchlist, postings, and application
+records stay in your Google Sheet, and alerts in your Gmail account. The author runs no server and has
 no access to your data. How the AI agent and connected services process
 data, though, follows each service's own settings and policies.
 
