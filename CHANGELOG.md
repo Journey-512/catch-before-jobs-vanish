@@ -58,6 +58,10 @@ real CV instead of being rewritten from the example.
   `cv.example.md` and `companies.example.md` remain references for outputs
   that cannot be represented by those templates. The daily run therefore
   reads only runtime fields and values, not setup guidance.
+- **Runtime docs no longer repeat translations.** Step 5 now reads an
+  English-only `fit-scoring-rubric.md`; its full Korean translation moved to
+  `docs/fit-scoring-rubric.ko-KR.md`, mirroring the existing pipeline-guide
+  split.
 
 ### Upgrade note
 
@@ -284,6 +288,10 @@ company watchlist with a quality gate; draft-then-send email.
   템플릿으로 보여줄 수 없는 결과 형식을 위한 `cv.example.md`와
   `companies.example.md`만 참고 자료로 남겼습니다. 따라서 매일 실행은 설정
   안내가 아니라 런타임 필드와 값만 읽습니다.
+- **런타임 문서에서 번역 중복을 제거했습니다.** Step 5가 읽는
+  `fit-scoring-rubric.md`에는 영문 원본만 남기고, 전체 한국어판은 기존
+  파이프라인 안내와 같은 방식으로 `docs/fit-scoring-rubric.ko-KR.md`에
+  분리했습니다.
 
 ### 업그레이드 안내
 

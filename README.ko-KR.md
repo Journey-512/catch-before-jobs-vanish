@@ -33,7 +33,7 @@ job-alert 파이프라인입니다.
 
 | 기능                              | 설명                                                                                                                                                               |
 | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **증거 기반 적합도 평가(fit scoring)**   | 공고의 요구사항을 CV에 기록된 경력과 성과에 항목별로 대조합니다. 단어가 얼마나 겹치는지가 아니라, 해당 역량을 입증할 경험이 있는지를 평가합니다. 점수의 근거는 Fit Reason에 남습니다 ([채점 기준표](skills/job-alert/fit-scoring-rubric.md)). |
+| **증거 기반 적합도 평가(fit scoring)**   | 공고의 요구사항을 CV에 기록된 경력과 성과에 항목별로 대조합니다. 단어가 얼마나 겹치는지가 아니라, 해당 역량을 입증할 경험이 있는지를 평가합니다. 점수의 근거는 Fit Reason에 남습니다 ([채점 기준표](docs/fit-scoring-rubric.ko-KR.md)). |
 | **경력 수준 보정(Skill calibration)** | skill마다 실제로 경험한 수준을 기록해 두면, 채점 과정에서 그 이상의 역량을 임의로 추정하지 않습니다. 에이전트가 CV를 바탕으로 초안을 만들고, 사용자가 검토해 확정합니다.                                                                |
 | **최근 공고 데일리 스캔**                | 매일 아침 LinkedIn과 Indeed의 최근 24시간 공고, 현재 목표로 삼은 회사의 채용 페이지를 확인합니다. 주 1회는 나머지 관심 회사까지 범위를 넓혀 탐색합니다.                                                                 |
 | **중복 없는 이력 관리**                 | 발견한 공고는 한 건당 한 행으로 기록합니다. 같은 공고가 다른 사이트에 다시 올라오거나 링크가 바뀌더라도 동일 공고로 식별되면 새 공고로 중복 등록하지 않습니다.                                                                      |
@@ -59,7 +59,7 @@ job-alert 파이프라인입니다.
 
 이 보정 과정은 전부 기록으로 남아 있습니다. 무엇을 왜 바꿨는지는
 [changelog](CHANGELOG.md)와
-[채점 기준표](skills/job-alert/fit-scoring-rubric.md)에서 그대로 볼 수
+[채점 기준표](docs/fit-scoring-rubric.ko-KR.md)에서 그대로 볼 수
 있습니다.
 
 ## 시작하는 법
@@ -180,9 +180,10 @@ flowchart LR
 읽어 정확한 위치에 기록됐는지 확인하며, 사용자가 직접 입력한 `Status` 값은
 덮어쓰지 않습니다.
 
-공통 동작 방식은 [`skills/job-alert/SKILL.md`](skills/job-alert/SKILL.md)와
-[채점 기준표](skills/job-alert/fit-scoring-rubric.md)에 버전으로 관리됩니다
-(한국어 안내: [`docs/skill.ko-KR.md`](docs/skill.ko-KR.md)). 사용자의 경력과
+실행 원본은 [`skills/job-alert/SKILL.md`](skills/job-alert/SKILL.md)와 영문
+[채점 기준표](skills/job-alert/fit-scoring-rubric.md)에 버전으로 관리됩니다.
+한국어판은 [파이프라인 안내](docs/skill.ko-KR.md)와
+[채점 기준표](docs/fit-scoring-rubric.ko-KR.md)로 분리되어 있습니다. 사용자의 경력과
 선호 조건은 [`your-input/`](your-input)에서 읽고, 관심 회사 목록은 구글
 시트의 `Companies` 탭에서 읽습니다. `Companies` 탭은 파이프라인이 매 실행
 확인하고 새로 발견한 회사를 추가하기도 하는 회사 registry이며, 사용자가 직접
@@ -222,9 +223,10 @@ catch-before-jobs-vanish/
 ├── skills/
 │   └── job-alert/
 │       ├── SKILL.md                 매일 실행되는 10단계 job-alert 파이프라인
-│       └── fit-scoring-rubric.md    증거 기반 채점 방식·가중치·상한과 백테스트 근거
+│       └── fit-scoring-rubric.md    실행용 영문 채점 방식·가중치·상한과 백테스트 근거
 ├── .claude-plugin/                  Claude Code 플러그인 설치용 설정 파일
 ├── docs/
+│   ├── fit-scoring-rubric.ko-KR.md  채점 기준표 한국어판
 │   └── skill.ko-KR.md               파이프라인 동작의 한국어 안내
 ├── your-input/                      CV·선호 조건·실행 설정 영역 (실제 입력은 gitignore, 템플릿·예시만 공개)
 │   ├── README.md                    각 파일에 무엇을 어떻게 채우는지 안내

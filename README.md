@@ -195,8 +195,9 @@ intended — and a `Status` you typed yourself is never overwritten.
 
 The shared logic is versioned in
 [`skills/job-alert/SKILL.md`](skills/job-alert/SKILL.md) and the
-[rubric](skills/job-alert/fit-scoring-rubric.md) (Korean guide:
-[`docs/skill.ko-KR.md`](docs/skill.ko-KR.md)). Your career and preferences
+[rubric](skills/job-alert/fit-scoring-rubric.md). Korean translations are
+separate: [pipeline](docs/skill.ko-KR.md) and
+[rubric](docs/fit-scoring-rubric.ko-KR.md). Your career and preferences
 are read from [`your-input/`](your-input); your watchlist lives in the
 Sheet's `Companies` tab — a registry the pipeline reads every run and
 appends discoveries to, never overwriting what you typed — while the `Jobs`
@@ -238,9 +239,10 @@ catch-before-jobs-vanish/
 ├── skills/
 │   └── job-alert/
 │       ├── SKILL.md                 the 10-step job-alert pipeline that runs every day
-│       └── fit-scoring-rubric.md    the evidence-based scoring method, weights, caps, and backtest grounds
+│       └── fit-scoring-rubric.md    runtime scoring method, weights, caps, and backtest grounds
 ├── .claude-plugin/                  config files for installing as a Claude Code plugin
 ├── docs/
+│   ├── fit-scoring-rubric.ko-KR.md  Korean translation of the scoring rubric
 │   └── skill.ko-KR.md               Korean guide to how the pipeline works
 ├── your-input/                      your personal input area — real inputs gitignored; templates and examples public
 │   ├── README.md                    what goes in each file, and how

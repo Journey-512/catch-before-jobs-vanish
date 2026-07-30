@@ -23,7 +23,7 @@ repo path: C:\Users\<본인>\...\catch-before-jobs-vanish/your-input/
 
 > **v3 (2026-07).** 이 template은 v1 파이프라인을 한 달간 매일 실운영한 결과로
 > 재작성됐습니다. 로직을 4층 10단계로 재구성했고, 채점을 증거 기반 방식으로 교체했으며
-> ([`skills/job-alert/fit-scoring-rubric.md`](../skills/job-alert/fit-scoring-rubric.md)), 이메일 컷을 60에서 70으로
+> ([한국어 채점 기준표](fit-scoring-rubric.ko-KR.md)), 이메일 컷을 60에서 70으로
 > 올렸고, 실운영에서 중복 행의 원인으로 판명된 "48시간 창" 중복 제거 규칙을 삭제했습니다.
 > 그래서 v3 프롬프트는 더 이상 "짧지" 않습니다 — 얇은 것은 길이가 아니라 **데이터**입니다:
 > 규칙은 길어졌지만 이 파일에 개인 값(이름·ID·임계값·타겟 회사)은 여전히 하나도 없습니다.
@@ -127,7 +127,7 @@ repo path: C:\Users\<본인>\...\catch-before-jobs-vanish/your-input/
 - **인상 채점 -> 증거 채점** — 옛 5항목 기준표(도메인 30/직무 25/...)는 두루뭉술한 인상이
   점수를 포화시켰습니다. 새 방식은 JD의 실제 요건을 뽑아 `cv.md`의 문서화된 증거와 하나씩
   대조합니다. 실제 지원 결과 백테스트가 무엇을 바꿨는지 포함해, 전체 이야기는
-  [`skills/job-alert/fit-scoring-rubric.md`](../skills/job-alert/fit-scoring-rubric.md)에 있습니다.
+  [한국어 채점 기준표](fit-scoring-rubric.ko-KR.md)에 있습니다.
 - **컷 60 -> 70** — 보정된 기준표에서 60-69는 받은편지함의 소음이었습니다 (시트엔 계속
   기록됩니다).
 - **정규화(2)·열림 확인(7) 단계 신설** — 한 달 운영에서 각각 독립 단계로 승격될 만큼
