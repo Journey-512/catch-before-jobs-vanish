@@ -316,7 +316,8 @@ cd ..
 `Copy-Item preferences.template.md preferences.md`처럼 쓰면 됩니다.)
 
 템플릿에는 런타임 필드·자리표시자·기본값만 들어 있습니다. 1회성 CV 변환
-요청문과 각 필드의 설명은 [`your-input` 안내](your-input/README.md)에
+요청문과 각 필드의 설명은
+[`your-input` 안내 (한국어)](your-input/README.md#cvmd-만들기-한국어-안내)에
 한 번만 정리되어 있습니다.
 
 `cv.md`, `preferences.md`, `config.md`가 모두 준비된 뒤에만 다음 단계로

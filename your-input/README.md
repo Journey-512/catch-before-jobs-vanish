@@ -160,7 +160,8 @@ The exact columns and their meanings are in
 
 Copy [`config.template.md`](config.template.md) to `config.md`. Replace all
 four angle-bracket placeholders: Sheet ID, email recipient, alert schedule,
-and alert timezone. The remaining values are working defaults; review the
+and alert timezone. The alert schedule is plain language, not cron — e.g.
+`Daily at 09:00`. The remaining values are working defaults; review the
 email subject, deep-scan settings, and Company discovery policy before the
 first run. Keep `Sheet tabs: Jobs | Companies` exactly as written.
 
@@ -313,8 +314,10 @@ Skill calibration은 CV의 명시적 증거에서 보수적으로 초안을 잡�
    맞는가
 
 `Skill calibration`은 CV에 단어가 있다는 이유만으로 AI가 실무 경험을
-과대평가하지 못하게 하는 상한선입니다. 비워 둬도 동작하며, 그때는 CV에
-명시된 증거까지만 인정합니다.
+과대평가하지 못하게 하는 상한선입니다. 동작 원리는
+[한국어 채점 기준표](../docs/fit-scoring-rubric.ko-KR.md)에 있습니다. 비워
+둬도 동작하며, 그때는 CV에 명시된 증거까지만 인정합니다. 완성된 출력이
+어떤 모습인지는 [`cv.example.md`](cv.example.md)에서 확인하세요.
 
 ## 나머지 파일 안내
 
@@ -343,6 +346,10 @@ Skill calibration은 CV의 명시적 증거에서 보수적으로 초안을 잡�
   알림 일정(`Alert schedule: Daily at 09:00`처럼 cron이 아닌 자연어)과 알림
   시간대(`Alert timezone`)를 적습니다. Alert timezone은 실행의 "오늘" 날짜,
   딥스캔 요일 판정, `Date Added`, 이메일·리포트 시각의 기준입니다.
+  꺾쇠괄호 자리표시자 4개(시트 ID·이메일 수신자·알림 일정·알림 시간대)는
+  전부 본인 값으로 교체하고, 나머지 기본값(이메일 제목·딥스캔 설정·Company
+  discovery 정책)은 첫 실행 전에 한 번 확인하세요. `Sheet tabs: Jobs |
+  Companies` 줄은 그대로 유지합니다.
 
 시간대 값 2가지 유의점:
 
