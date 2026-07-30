@@ -52,9 +52,12 @@ real CV instead of being rewritten from the example.
 - **CV onboarding: convert, don't rewrite.** You paste your existing CV
   into `cv-original.md` (private; the daily run never reads it) and
   convert it once into the scoring file `cv.md` with a provided request,
-  then review it before the first scheduled run. `cv.example.md` is now a
-  format reference for the converted output, not a copy target — only
-  `preferences.example.md` and `config.example.md` get copied.
+  then review it before the first scheduled run. The clean
+  `preferences.template.md` and `config.template.md` files are now the only
+  copy targets; the redundant completed settings examples were removed.
+  `cv.example.md` and `companies.example.md` remain references for outputs
+  that cannot be represented by those templates. The daily run therefore
+  reads only runtime fields and values, not setup guidance.
 
 ### Upgrade note
 
@@ -276,9 +279,11 @@ company watchlist with a quality gate; draft-then-send email.
 - **CV 온보딩: 다시 쓰지 않고 변환합니다.** 기존 이력서를
   `cv-original.md`에 붙여넣고(비공개, 매일 실행은 읽지 않음) 제공된
   요청문으로 채점용 `cv.md`를 한 번 변환한 뒤, 첫 예약 실행 전에 직접
-  검토합니다. `cv.example.md`는 변환 결과의 형식 참고 자료가 됐고 복사
-  대상이 아닙니다 — 복사하는 예시는 `preferences.example.md`와
-  `config.example.md` 둘뿐입니다.
+  검토합니다. 이제 깨끗한 `preferences.template.md`와
+  `config.template.md`만 복사하며, 중복되던 완성 설정 예시는 삭제했습니다.
+  템플릿으로 보여줄 수 없는 결과 형식을 위한 `cv.example.md`와
+  `companies.example.md`만 참고 자료로 남겼습니다. 따라서 매일 실행은 설정
+  안내가 아니라 런타임 필드와 값만 읽습니다.
 
 ### 업그레이드 안내
 

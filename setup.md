@@ -98,143 +98,25 @@ account your Drive connector uses.
 
 ## Step 3 — Fill in `your-input/`
 
-Two of the folder's **example files** are filled in for a made-up person (a
-fictional 3-year travel & mobility PM) and meant for copying — drop the
-`.example` from the name and edit with your details:
+Copy the folder's two clean **template files** — drop `.template` from the
+name and replace the angle-bracket placeholders with your details:
 
 ```bash
 cd your-input
-cp preferences.example.md preferences.md
-cp config.example.md config.md
+cp preferences.template.md preferences.md
+cp config.template.md config.md
 cd ..
 ```
 
-(Windows PowerShell: `Copy-Item preferences.example.md preferences.md`, etc.)
+(Windows PowerShell: `Copy-Item preferences.template.md preferences.md`,
+etc.)
 
-The other two examples are references, not copy targets:
-`companies.example.md` shows the format of the `Companies` tab you filled in
-Step 2, and `cv.example.md` shows what a converted `cv.md` looks like.
+The templates contain only runtime fields, placeholders, and defaults. Finish
+all three inputs with the [`your-input` guide](your-input/README.md), which
+contains the one-time CV conversion request and the field explanations.
 
-What each runtime file is for:
-
-- `cv.md` — your career evidence for scoring, plus a **Skill calibration**
-  section; created by the one-time conversion below, not by copying
-- `preferences.md` — titles, locations, industries, recency, cutoff, output
-  language, an **Eligibility** section (knockouts), plus **Remote-work
-  compatibility**: the work-hours timezone you'll actually work in, and the
-  maximum timezone difference (default 4 hours) a remote role may sit from
-  it before it's excluded
-- `config.md` — Sheet ID, email recipient, subject, deep-scan weekday (one
-  day a week the run sweeps your whole watchlist, not just the fresh
-  postings), per-tier cap, the **Alert delivery** section (alert schedule
-  in plain language + alert timezone), plus the **Company discovery**
-  settings (whether new companies get auto-added to the `Companies` tab,
-  and the maturity bar they must clear)
-
-Your local input is these three files. Your company list is not one of
-them — it lives in the Sheet's `Companies` tab (Step 2).
-
-Timezones are written in Region/City form — `Europe/Amsterdam`,
-`Europe/Berlin`, `Asia/Seoul`, `America/New_York` — never a bare city name,
-a GMT offset, or an
-abbreviation like CET or KST: Region/City keeps your local clock right
-when daylight saving shifts the offset. The two timezone fields do
-different jobs and are never merged: the alert timezone (`config.md`) sets
-the run's dates, the deep-scan weekday, `Date Added`, and email times,
-while the work-hours timezone (`preferences.md`) only judges remote roles.
-They may hold the same value — the demo persona gets alerts in
-`Asia/Seoul` and plans to work in `Europe/Berlin`, so they differ.
-
-**Your `cv.md`: paste, convert, review.** Create
-`your-input/cv-original.md` and paste the complete text of your existing CV
-under this heading — plain text copied out of your CV is fine, no Markdown
-cleanup needed:
-
-```markdown
-# Original CV
-
-<Paste the complete text of your existing CV here>
-```
-
-Only have a PDF or DOCX? Ask your agent to extract the full text into
-`cv-original.md` first — the daily pipeline never reads PDF or DOCX files.
-Then give your agent this conversion request:
-
-```
-Read `your-input/cv-original.md` and create `your-input/cv.md`.
-
-Use `your-input/cv.example.md` only as a reference for the output structure.
-Never copy facts from the fictional example.
-
-Structure the result as:
-
-# CV summary (for fit scoring)
-## Positioning
-## Experience
-## Strengths
-## Domains I know well
-## Skill calibration
-
-Preserve every company, role, date, number, achievement, and skill exactly as
-supported by `cv-original.md`. Do not invent, strengthen, or infer experience
-that is not written in the source.
-
-You may read `preferences.md` to understand the target role and industries,
-but preferences are context, never career evidence.
-
-Draft Skill calibration conservatively from explicit CV evidence:
-- Core: direct, repeated experience
-- Transferable: partial or adjacent experience, with an honest cap
-- Gap: do not infer a gap merely because the CV is silent
-
-If evidence is missing or ambiguous, omit the claim instead of guessing.
-Do not anonymize company names unless I explicitly ask.
-After creating the file, show me what I need to review before it is used.
-```
-
-Before you register the scheduled task, review the generated `cv.md`:
-
-1. Company names, titles, dates, and numbers match the original.
-2. No new experience or achievements were invented.
-3. `Strengths` and `Domains I know well` stay within the actual evidence.
-4. The `Skill calibration` Core / Transferable / Gap split matches your
-   real level of experience.
-
-`cv-original.md` stays yours and private; the daily run reads only
-`cv.md`. Nothing regenerates automatically — when your CV changes, rerun
-the conversion and review the new `cv.md`.
-
-**Upgrading from an earlier version?** A good, already-reviewed `cv.md`
-stays valid — no `cv-original.md` needed. Also rename two settings if your
-files predate this version: `Schedule:` (cron) becomes `Alert schedule:`
-plus `Alert timezone:` in `config.md`, and `Home timezone` plus `Remote
-anchor rule` become `Work-hours timezone` plus `Maximum timezone
-difference` in `preferences.md`. The run stops and names the field when
-`Alert timezone` or `Work-hours timezone` is missing (a missing `Alert
-schedule` alone never blocks a manual run, and a missing `Maximum timezone
-difference` falls back to 4 hours).
-
-**About the Skill calibration section in `cv.md` — read this once.** It's a
-list where each line states how far you've *actually* gone with a skill. It
-exists because AI scorers over-credit by default: the word "SQL" anywhere in
-a CV tends to be read as "SQL practitioner". Write `SQL: I read and tweak
-dashboard queries` and the scorer can no longer give you full credit on a
-hands-on data-engineering requirement. The more honest this list, the closer
-your daily scores track reality.
-
-How to build it: the conversion request above *drafts* it from your CV —
-then go line by line and correct it yourself before keeping it. The final
-say stays with you on purpose — if the same AI that scores you also sets
-its own limits, the check means nothing.
-
-You can also leave it empty: the system still runs, the scorer just falls
-back to one default rule — only what's written in the CV counts, nothing gets
-assumed on top. Add a line whenever a score looks off.
-
-Details and skeletons: [`your-input/README.md`](your-input/README.md). Your
-real `cv-original.md` / `cv.md` / `preferences.md` / `config.md` are on
-git's ignore list (only the `*.example.md` versions are public), so your
-personal data never gets pushed.
+Continue only after `cv.md`, `preferences.md`, and `config.md` are ready.
+If you are upgrading, follow the [3.2 upgrade note](CHANGELOG.md#upgrade-note).
 
 ## Step 4 — Hand the pipeline to your agent
 
@@ -420,141 +302,26 @@ https://docs.google.com/spreadsheets/d/이-긴-문자열이-시트-ID/edit
 
 ## 3단계 — `your-input/` 채우기
 
-이 폴더의 예시 파일 중 2개는 가공 인물(창작한 여행·모빌리티 3년차 PM)로
-**미리 채워 둔 복사용**입니다 — 이름에서 `.example`만 빼고 본인 내용으로
-고치세요:
+이 폴더의 깨끗한 **템플릿 파일 2개**를 복사합니다 — 이름에서 `.template`을
+빼고 꺾쇠괄호로 표시된 자리표시자를 본인 값으로 바꾸세요:
 
 ```bash
 cd your-input
-cp preferences.example.md preferences.md
-cp config.example.md config.md
+cp preferences.template.md preferences.md
+cp config.template.md config.md
 cd ..
 ```
 
-(윈도우 PowerShell에서는 `Copy-Item preferences.example.md preferences.md`처럼
-쓰면 됩니다.)
+(윈도우 PowerShell에서는
+`Copy-Item preferences.template.md preferences.md`처럼 쓰면 됩니다.)
 
-나머지 예시 2개는 복사하지 않는 참고 자료입니다. `companies.example.md`는
-2단계에서 만든 `Companies` 탭의 입력 형식을, `cv.example.md`는 변환된
-`cv.md`가 어떤 모습인지 보여줍니다.
+템플릿에는 런타임 필드·자리표시자·기본값만 들어 있습니다. 1회성 CV 변환
+요청문과 각 필드의 설명은 [`your-input` 안내](your-input/README.md)에
+한 번만 정리되어 있습니다.
 
-각 런타임 파일의 용도:
-
-- `cv.md` — 채점에 쓸 경력 정리 + **Skill calibration** 섹션. 복사가 아니라
-  아래의 1회성 변환으로 만듭니다
-- `preferences.md` — 직무명, 지역, 산업, 최신성, 이메일 컷, 출력 언어,
-  **Eligibility** 섹션 (지원이 무의미해지는 조건) + **Remote-work
-  compatibility**: 실제로 근무하려는 시간대(`Work-hours timezone`)와 remote
-  공고가 그 시간대에서 벗어나도 되는 최대 차이(`Maximum timezone
-  difference`, 기본 4시간)
-- `config.md` — 시트 ID, 이메일 수신자, 제목, 딥스캔 요일 (일주일에 하루,
-  새 공고만이 아니라 관심 회사 전체를 훑는 날), tier당 회사 수 제한 +
-  **Alert delivery** 섹션 (자연어로 적는 알림 일정 + 알림 시간대) +
-  **Company discovery** 설정 (새 회사를 `Companies` 탭에 자동 추가할지,
-  그리고 통과해야 하는 회사 성숙도 기준)
-
-로컬 입력은 이 세 파일이 전부입니다. 회사 목록은 여기 없습니다 — 2단계의
-`Companies` 탭에서 관리합니다.
-
-시간대는 지역/도시 형식으로 적습니다 — `Europe/Amsterdam`, `Europe/Berlin`,
-`Asia/Seoul`, `America/New_York`. 도시 이름만 적거나 GMT+9 같은 오프셋, CET·KST 같은
-약어는 쓰지 않습니다. 지역/도시 형식이어야 서머타임으로 오프셋이 바뀌어도
-현지 시각이 유지됩니다. 두 시간대 필드는 역할이 달라 합치지 않습니다:
-`config.md`의 알림 시간대(Alert timezone)는 실행 날짜, 딥스캔 요일, `Date
-Added`, 이메일 시각의 기준이고, `preferences.md`의 근무 시간대(Work-hours
-timezone)는 remote 공고 판정에만 씁니다. 값이 같아도 되지만, 데모의 가공
-인물은 알림은 `Asia/Seoul`에서 받고 근무는 `Europe/Berlin`을 계획해서 서로
-다릅니다.
-
-**`cv.md` 만들기: 붙여넣고, 변환하고, 검토합니다.**
-`your-input/cv-original.md`를 만들고 아래 제목 밑에 기존 이력서의 전체
-텍스트를 그대로 붙여넣으세요 — 이력서에서 복사한 일반 텍스트면 충분하고,
-Markdown으로 다시 정리할 필요 없습니다:
-
-```markdown
-# Original CV
-
-<여기에 기존 이력서의 전체 텍스트를 붙여넣으세요>
-```
-
-PDF나 DOCX만 있다면, 에이전트에게 내용을 빠짐없이 추출해 `cv-original.md`로
-저장해 달라고 먼저 요청하세요. 매일 실행되는 파이프라인이 PDF·DOCX를 직접
-읽는 일은 없습니다. 그다음 에이전트에게 이 변환 요청문을 주세요:
-
-```
-`your-input/cv-original.md`를 읽고 `your-input/cv.md`를 만들어줘.
-
-`your-input/cv.example.md`는 출력 구조를 참고하는 용도로만 쓰고,
-가공 인물의 사실은 절대 가져오지 마.
-
-결과 구조:
-
-# CV summary (for fit scoring)
-## Positioning
-## Experience
-## Strengths
-## Domains I know well
-## Skill calibration
-
-회사·직책·날짜·수치·성과·skill은 `cv-original.md`가 뒷받침하는 그대로
-보존해. 원문에 없는 경험을 지어내거나 부풀리거나 추론하지 마.
-
-타겟 직무와 산업을 이해하려고 `preferences.md`를 읽는 건 되지만,
-선호는 맥락일 뿐 경력 증거가 아니야.
-
-Skill calibration은 CV의 명시적 증거에서 보수적으로 초안을 잡아줘:
-- Core: 직접적이고 반복된 경험
-- Transferable: 부분적이거나 인접한 경험, 정직한 상한과 함께
-- Gap: CV에 안 적혀 있다는 이유만으로 Gap으로 추정하지 말 것
-
-증거가 없거나 모호하면 추측하지 말고 그 주장은 빼.
-내가 명시적으로 요청하지 않는 한 회사명을 익명화하지 마.
-파일을 만든 뒤, 쓰기 전에 내가 검토해야 할 부분을 보여줘.
-```
-
-예약 작업을 등록하기 전에, 만들어진 `cv.md`를 검토하세요:
-
-1. 회사명·직책·날짜·수치가 원본과 일치하는가
-2. 새로운 경력이나 성과가 만들어지지 않았는가
-3. `Strengths`와 `Domains I know well`이 실제 증거를 벗어나지 않는가
-4. `Skill calibration`의 Core·Transferable·Gap 분류가 실제 경험 수준과
-   맞는가
-
-`cv-original.md`는 본인이 보관하는 비공개 파일이고, 매일 실행은 `cv.md`만
-읽습니다. 자동으로 다시 만들어지지 않으니, 이력서가 바뀌면 변환을 다시
-실행하고 새 `cv.md`를 검토하세요.
-
-**이전 버전에서 업그레이드한다면?** 이미 잘 검토된 `cv.md`는 그대로
-유효합니다 — `cv-original.md`를 새로 만들 필요 없습니다. 다만 설정 필드
-2가지는 이름을 바꿔야 합니다: `config.md`의 `Schedule:`(cron)은 `Alert
-schedule:` + `Alert timezone:`으로, `preferences.md`의 `Home timezone`과
-`Remote anchor rule`은 `Work-hours timezone`과 `Maximum timezone
-difference`로. `Alert timezone`이나 `Work-hours timezone`이 없으면 실행이
-멈추고 어떤 필드가 문제인지 알려줍니다 (`Alert schedule`만 없는 경우는 수동
-실행을 막지 않고, `Maximum timezone difference`가 없으면 기본 4시간으로
-동작합니다).
-
-**`cv.md`의 Skill calibration 섹션은 한 번 짚고 넘어갈게요.** 스킬마다 "내가
-실제로 어디까지 해봤는지"를 한 줄씩 적어 두는 목록입니다. 왜 필요하냐면, AI
-채점기는 CV에 SQL이라는 단어가 있기만 해도 SQL 실무자로 후하게 점수를 주는
-경향이 있기 때문입니다. 예를 들어 `SQL: 대시보드 쿼리를 읽고 고치는 수준`이라고
-적어 두면, 채점기는 데이터 엔지니어링을 요구하는 공고에서 그 이상으로는 점수를
-못 줍니다. 이 목록이 정직할수록 매일 받는 점수가 내 실제 수준에 가까워집니다.
-
-만드는 방법: 위의 변환 요청문이 CV에서 초안을 잡아 줍니다. 나온 초안을 한
-줄씩 읽으면서 실제 내 수준에 맞게 본인이 고쳐서 확정하세요. 마지막 확인을
-사람이 하는 데에는 이유가 있습니다 — 채점하는 AI가 자기 채점 기준까지 스스로
-정하면, 견제 장치가 있으나 마나가 되기 때문입니다.
-
-이 섹션은 비워 둬도 됩니다. 그래도 시스템은 정상으로 돌아갑니다. 채점기는 "CV에
-적힌 내용까지만 인정하고, 적혀 있지 않은 능력은 없는 것으로 본다"는 기본
-규칙만으로 채점합니다. 쓰다가 점수가 이상하다 싶은 날, 그때 한 줄씩 추가해도
-됩니다.
-
-자세한 설명과 양식: [`your-input/README.md`](your-input/README.md). 본인이 만든
-`cv-original.md` / `cv.md` / `preferences.md` / `config.md`는 git 제외
-목록(.gitignore)에 들어 있습니다(`*.example.md`만 공개). 개인 데이터가 GitHub에
-올라갈 일은 없습니다.
+`cv.md`, `preferences.md`, `config.md`가 모두 준비된 뒤에만 다음 단계로
+넘어가세요. 기존 버전에서 업그레이드한다면
+[3.2 업그레이드 안내](CHANGELOG.md#업그레이드-안내)를 따르세요.
 
 ## 4단계 — 에이전트에 파이프라인 넘기기
 

@@ -87,10 +87,10 @@ Claude **Cowork**와 다음 세 가지 connector(내 계정의 다른 서비스�
    [`your-input/companies.example.md`](your-input/companies.example.md)).
    각 탭에 필요한 열은
    [setup.md 2단계](setup.md#2단계--구글-시트-만들기)에 정리되어 있습니다.
-3. **예시 프로필을 내 정보로 바꿉니다.** [`your-input/`](your-input)에는
-   여행·모빌리티 분야의 가상 PM을 기준으로 만든 예시 파일이 들어 있습니다.
-   그중 두 개를 복사해 이름에서 `.example`을 제거한 뒤 본인 내용으로
-   수정합니다.
+3. **내 프로필과 설정을 채웁니다.** [`your-input/`](your-input)의 템플릿
+   2개를 사용합니다. `preferences.template.md`를 `preferences.md`로,
+   `config.template.md`를 `config.md`로 복사한 뒤 자리표시자를 본인 값으로
+   바꿉니다.
 
    - `preferences.md` — 원하는 직무·지역·산업, 제외 조건, 지원 자격, 이메일
      기준 점수, 그리고 remote 공고 판정에 쓰는 근무 시간대
@@ -99,13 +99,14 @@ Claude **Cowork**와 다음 세 가지 connector(내 계정의 다른 서비스�
 
    `cv.md`는 복사가 아니라 생성합니다: 기존 이력서의 텍스트를
    `your-input/cv-original.md`에 붙여넣고 에이전트에게 한 번 변환을 맡긴 뒤
-   결과를 직접 검토합니다 — 복사해 쓸 변환 요청문과 검토 체크리스트는
-   [setup.md 3단계](setup.md#3단계--your-input-채우기)에 있습니다. 나머지
-   예시는 복사하지 않는 참고 자료입니다: `cv.example.md`는 생성된 `cv.md`가
-   어떤 모습인지, `companies.example.md`는 `Companies` 탭의 형식(위 2번)을
-   보여줍니다. 앞에서 복사한 시트 ID는 `config.md`에 붙여넣습니다. 여기의
-   개인 파일은 전부 `.gitignore`에 포함되므로 사용자의 실제 CV와 설정이
-   GitHub에 올라가지 않습니다.
+   결과를 직접 검토합니다. 변환 요청문, 검토 체크리스트, 각 필드의 설명은
+   [`your-input` 안내](your-input/README.md#cvmd-만들기-한국어-안내)에 있습니다.
+   `cv.example.md`는 생성된 `cv.md`가 어떤 모습인지,
+   `companies.example.md`는 `Companies` 탭의 형식(위 2번)을 보여줍니다.
+   두 파일 모두 복사하지 않는 참고 자료입니다. 템플릿에는 실행에 필요한 값만
+   있어 매일 안내문을 다시 읽지 않습니다. 앞에서 복사한 시트 ID는
+   `config.md`에 붙여넣습니다. 여기의 개인 파일은 전부 `.gitignore`에
+   포함되므로 사용자의 실제 CV와 설정이 GitHub에 올라가지 않습니다.
 4. **에이전트에 파이프라인을 연결합니다.** Claude Code에서는 아래 두 명령으로
    `job-alert` skill을 설치합니다.
 
@@ -225,12 +226,12 @@ catch-before-jobs-vanish/
 ├── .claude-plugin/                  Claude Code 플러그인 설치용 설정 파일
 ├── docs/
 │   └── skill.ko-KR.md               파이프라인 동작의 한국어 안내
-├── your-input/                      CV·선호 조건·실행 설정의 개인 입력 영역 (gitignore — 예시만 공개)
+├── your-input/                      CV·선호 조건·실행 설정 영역 (실제 입력은 gitignore, 템플릿·예시만 공개)
 │   ├── README.md                    각 파일에 무엇을 어떻게 채우는지 안내
 │   ├── companies.example.md         Companies 탭 입력 참고 예시 — 복사하지 않음
-│   ├── config.example.md            config.md로 복사
+│   ├── config.template.md           config.md로 복사하는 템플릿
 │   ├── cv.example.md                생성된 cv.md의 모습 — 참고용, 복사하지 않음
-│   └── preferences.example.md       preferences.md로 복사
+│   └── preferences.template.md      preferences.md로 복사하는 템플릿
 ├── LICENSE                          MIT
 └── .gitignore                       실제 개인 파일이 저장소에 커밋되지 않게 막음
 ```

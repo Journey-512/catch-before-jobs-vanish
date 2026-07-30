@@ -11,31 +11,28 @@ finds. You configure the system by editing these files and the tab — your
 company list itself lives in the Sheet, never in a local file.
 
 > **Privacy:** everything in this folder is gitignored except this README,
-> `.gitkeep`, and the `*.example.md` files. Your real CV — both the pasted
-> original (`cv-original.md`) and the scoring file (`cv.md`) — plus your
-> preferences and config never get committed or pushed. Your company list
-> never touches this repo at all, because it lives in your Google Sheet.
-> See the repo root `.gitignore` for the exact rule.
+> `.gitkeep`, the two templates, and the `cv` / `Companies` reference
+> examples. Your real CV — both the pasted original
+> (`cv-original.md`) and the scoring file (`cv.md`) — plus your preferences
+> and config never get committed or pushed. Your company list never touches
+> this repo at all, because it lives in your Google Sheet. See the repo root
+> `.gitignore` for the exact rule.
 
-## Fastest start: copy the examples
+## Fastest start: copy the templates
 
-Two of this folder's example files are meant to be copied — drop the
-`.example` from the name, then replace the contents with your own details:
+Copy the two `.template.md` files, drop `.template` from the names, and
+replace every angle-bracket placeholder with your own value:
 
 ```bash
-cp preferences.example.md preferences.md
-cp config.example.md      config.md
+cp preferences.template.md preferences.md
+cp config.template.md      config.md
 ```
 
-(On Windows PowerShell use `Copy-Item preferences.example.md preferences.md`,
+(On Windows PowerShell use `Copy-Item preferences.template.md preferences.md`,
 etc.)
 
-The other two examples are references, never copied:
-[`cv.example.md`](cv.example.md) shows what a converted `cv.md` looks like,
-and [`companies.example.md`](companies.example.md) shows how to fill the
-`Companies` tab of your Google Sheet. The persona in the examples — a
-3-year travel & mobility PM applying from Seoul with EU work authorization
-— is invented end to end for the demo.
+The templates contain only the fields, placeholders, and defaults the
+pipeline needs — no duplicated English/Korean guidance to reread every run.
 
 `cv.md` is neither copied nor written from scratch: you convert it once
 from your real CV — see the `cv.md` section below.
@@ -128,135 +125,44 @@ After creating the file, show me what I need to review before it is used.
 4. The `Skill calibration` Core / Transferable / Gap split matches your
    real level of experience.
 
-The output structure the conversion produces:
-
-```markdown
-# CV summary (for fit scoring)
-
-## Positioning
-One or two sentences: who you are professionally and the role you're targeting.
-
-## Experience
-- Role, domain, seniority, years — one block per role. A one-line company
-  profile ([stage | domain | scale]) works better than a brand name if you'd
-  rather keep employers out of the file.
-- Bullets: verb + outcome number + how / with whom.
-
-## Strengths
-- 3-6 bullet points the scorer should weight heavily.
-
-## Domains I know well
-on-demand mobility, travel booking, ... (the scorer boosts matches here)
-
-## Skill calibration
-One line per skill, syntax: `skill: one-line scope. [req type] = [max credit]`
-- Core: <experience that always matches>
-- Transferable: <partial experience> — with explicit caps
-- Gap: <absent but you apply anyway>
-```
-
 The **Skill calibration** section is the anti-inflation control described in
 [`../skills/job-alert/fit-scoring-rubric.md`](../skills/job-alert/fit-scoring-rubric.md).
 The conversion request drafts it from your CV — you confirm it (that
 sign-off is the point). It also works empty: scoring then runs on the "as
-written, never above" meta-rule alone. Format reference:
-[`cv.example.md`](cv.example.md) — never copy its facts.
+written, never above" meta-rule alone. [`cv.example.md`](cv.example.md)
+shows the complete output shape.
 
-### `preferences.md` — skeleton
+### `preferences.md` — template + field guide
 
-```markdown
-# Preferences
-
-## Target titles (allowlist — exact)
-- Product Manager
-- Senior Product Manager
-- ...
-
-## Excluded titles (never match)
-- Intern, Lead, Director, VP, Head, Chief, Group, ... (whatever levels you
-  don't want)
-
-## Locations
-- Acceptable: <e.g., Netherlands, Germany, EU-remote, hybrid Berlin>
-- Extended locations (Aiming companies only): <e.g., London>
-- Hard exclude: <e.g., Asia / Australia remote — timezone>
-
-## Remote-work compatibility
-- Work-hours timezone: <e.g., Europe/Berlin — where you'll actually work>
-- Maximum timezone difference: <hours; default 4 — remote roles anchored
-  further away are excluded>
-
-## Eligibility (knockout conditions)
-- Languages I work in: <e.g., English, Korean>
-- Work authorization: <regions where you hold it / regions needing sponsorship>
-
-## Industries
-- Strong: <list>   - Soft: <list>   - Avoid: <list>
-
-## Recency
-Rolling 24-hour window, strict.
-
-## Email threshold
-Cutoff 70 (default — change freely). Top >= 85, Strong 70-84; below the
-cutoff is recorded in the Sheet, never emailed.
-
-## Output language
-Sheet and email language: <e.g., English>
-```
+Copy [`preferences.template.md`](preferences.template.md) to
+`preferences.md`. The template is the canonical runtime skeleton: it contains
+only field names, placeholders, and defaults, without the bilingual
+explanations on this page. Replace every angle-bracket placeholder; duplicate
+list rows where you need more titles or values.
 
 The **Eligibility** section is where knockouts live — conditions that make an
 application pointless (a language you don't work in, missing work
 authorization). The hard gates enforce them by dropping postings outright; the
-scorer never sees them. Full example:
-[`preferences.example.md`](preferences.example.md).
+scorer never sees them. The maximum timezone difference defaults to 4 hours
+and the email cutoff to 70; review both values, but keep the rolling window at
+24 hours.
 
 ### The `Companies` tab — your company registry
 
 Your company list lives in the Google Sheet, not in this folder. The
 `Companies` tab is the single source of truth for the list and every
 per-company attribute, and the pipeline reads it at the start of every run.
-Its 9 columns, in this exact order:
+The exact columns and their meanings are in
+[`companies.example.md`](companies.example.md). Auto-add policy belongs in
+`config.md`.
 
-| Index | Company | Aiming | Match Level | URL | Source site | HQ | Topics | Memo |
-|---|---|---|---|---|---|---|---|---|
-| 1 | `<Company name>` | `<Aiming or blank>` | `<Strong or Soft>` | `<careers URL or blank>` | `<source or blank>` | `<HQ or blank>` | `<topics or blank>` | `<note or blank>` |
+### `config.md` — template + field guide
 
-- **`Aiming`** — hand-set only, for the 1-3 companies you're actively
-  gunning for (7-day window, extended locations, daily careers check).
-  Auto-added rows always leave it blank.
-- **`Match Level`** — `Strong` or `Soft`, mirroring your industry classes in
-  `preferences.md`; it orders the weekly deep-scan sweep.
-- The auto-add policy (whether new companies get appended, and the maturity
-  bar) is configured in `config.md` — see the skeleton below.
-
-Format reference for the tab: [`companies.example.md`](companies.example.md)
-— a Markdown file to look at while filling in the Sheet, never copied to a
-local file.
-
-### `config.md` — skeleton
-
-```markdown
-# Config
-
-- Google Sheet ID: <YOUR_SHEET_ID>
-- Sheet tabs: Jobs | Companies
-- Email recipient: your-email@example.com
-- Email subject: Catch the fresh fish before jobs vanish
-- Deep-scan weekday: Tuesday # weekly Strong/Soft company sweep — "which
-                             # day is today" is judged in the Alert timezone
-- Per-tier company cap: 8    # deep-scan day, per tier
-
-## Alert delivery
-
-- Alert schedule: Daily at 09:00
-- Alert timezone: Asia/Seoul
-
-## Company discovery
-
-- Auto-add newly discovered companies: yes
-- Minimum company maturity: Series C+, listed, or clearly established
-- Accepted industry match: Strong or Soft
-```
+Copy [`config.template.md`](config.template.md) to `config.md`. Replace all
+four angle-bracket placeholders: Sheet ID, email recipient, alert schedule,
+and alert timezone. The remaining values are working defaults; review the
+email subject, deep-scan settings, and Company discovery policy before the
+first run. Keep `Sheet tabs: Jobs | Companies` exactly as written.
 
 Two notes on the time fields:
 
@@ -274,8 +180,6 @@ Two notes on the time fields:
   not update an already-registered task — change the scheduler's
   registration too, and check that its next-run time matches the local
   time you intended.
-
-Full example: [`config.example.md`](config.example.md).
 
 ---
 
@@ -297,31 +201,28 @@ and register the scheduled task.
 registry)입니다. 실행할 때 프롬프트가 이 폴더와 그 탭을 읽어 그 내용대로
 동작합니다. 회사 목록은 로컬 파일이 아니라 시트에서 직접 관리합니다.
 
-> **개인정보:** 이 폴더 안의 파일은 이 README와 `.gitkeep`, `*.example.md`를
-> 빼면 전부 gitignore 처리됩니다. 실제 이력서 — 붙여넣은 원문
-> `cv-original.md`와 채점용 `cv.md` 둘 다 — 와 선호·설정은 커밋되거나
-> 푸시되지 않습니다. 회사 목록은 구글 시트에 있어서 애초에 이 repo에
-> 들어오지 않습니다. 정확한 규칙은 repo 루트의 `.gitignore`에서 확인하세요.
+> **개인정보:** 이 폴더 안의 파일은 이 README, `.gitkeep`, 템플릿
+> 2개와 `cv` / `Companies` 참고 예시를 빼면 전부 gitignore 처리됩니다.
+> 실제 이력서 — 붙여넣은 원문 `cv-original.md`와 채점용 `cv.md` 둘 다 — 와
+> 선호·설정은 커밋되거나 푸시되지 않습니다. 회사 목록은 구글 시트에 있어서
+> 애초에 이 repo에 들어오지 않습니다. 정확한 규칙은 repo 루트의
+> `.gitignore`에서 확인하세요.
 
-## 가장 빠른 시작: 예시 복사하기
+## 가장 빠른 시작: 템플릿 복사하기
 
-이 폴더의 예시 파일 중 복사해서 쓰는 것은 2개입니다 — 이름에서 `.example`만
-빼고 본인 내용으로 고치면 됩니다:
+두 `.template.md` 파일을 복사해 이름에서 `.template`을 빼고, 꺾쇠괄호로 표시된
+자리표시자를 본인 값으로 바꾸세요:
 
 ```bash
-cp preferences.example.md preferences.md
-cp config.example.md      config.md
+cp preferences.template.md preferences.md
+cp config.template.md      config.md
 ```
 
-(윈도우 PowerShell에서는 `Copy-Item preferences.example.md preferences.md`처럼
+(윈도우 PowerShell에서는 `Copy-Item preferences.template.md preferences.md`처럼
 쓰세요.)
 
-나머지 예시 2개는 복사하지 않는 참고 자료입니다.
-[`cv.example.md`](cv.example.md)는 변환된 `cv.md`가 어떤 모습인지,
-[`companies.example.md`](companies.example.md)는 구글 시트 `Companies` 탭을
-어떻게 채우는지 보여줍니다. 예시 속 인물(서울에서 EU 이직을 준비하는
-여행·모빌리티 3년차 PM, EU work authorization 보유)은 데모용으로 처음부터
-끝까지 창작한 가공 인물입니다.
+템플릿에는 파이프라인에 필요한 필드·자리표시자·기본값만 들어 있습니다. 매번
+영문·한국어 설명을 중복해서 읽지 않습니다.
 
 `cv.md`는 복사하는 파일도, 처음부터 새로 쓰는 파일도 아닙니다. 본인의 기존
 이력서에서 한 번 변환해 만듭니다 — 아래 `cv.md` 부분을 보세요.
@@ -363,7 +264,7 @@ cp config.example.md      config.md
 3. 만들어진 `cv.md`를 한 줄씩 검토합니다 (아래 체크리스트).
 4. 검토가 끝난 다음에만 예약 작업을 등록합니다.
 
-`cv-original.md`는 본인이 보관하는 비공개 파일이고(예시가 아닌 파일은 전부
+`cv-original.md`는 본인이 보관하는 비공개 파일이고(실제 개인 입력은 전부
 gitignore), 매일 실행되는 job-alert 파이프라인은 읽지 않습니다 — 채점에는
 `cv.md`만 쓰입니다. 자동으로 다시 만들어지는 일도 없습니다: 이력서가 바뀌면
 변환 요청을 다시 실행하고 새 `cv.md`를 검토하세요. 이전 버전에서 이미 잘
@@ -411,12 +312,18 @@ Skill calibration은 CV의 명시적 증거에서 보수적으로 초안을 잡�
 4. `Skill calibration`의 Core·Transferable·Gap 분류가 실제 경험 수준과
    맞는가
 
+`Skill calibration`은 CV에 단어가 있다는 이유만으로 AI가 실무 경험을
+과대평가하지 못하게 하는 상한선입니다. 비워 둬도 동작하며, 그때는 CV에
+명시된 증거까지만 인정합니다.
+
 ## 나머지 파일 안내
 
-각 파일의 뼈대(skeleton)는 위 영문 섹션의 코드 블록을 그대로 가져다 쓰면
-됩니다. 내용을 한국어로 적어도 동작에는 문제없지만 직무명(예: Product
-Manager)처럼 실제 채용 사이트 검색에 쓰이는 키워드는 영어 표기를 그대로 두는
-편이 좋습니다.
+`preferences.md`와 `config.md`의 뼈대는 각각
+[`preferences.template.md`](preferences.template.md)와
+[`config.template.md`](config.template.md)를 복사해 만듭니다. 템플릿에는
+런타임이 읽을 필드·자리표시자·기본값만 있습니다. 실제 값은 한국어로 적어도
+동작에는 문제없지만 직무명(예: Product Manager)처럼 채용 사이트 검색에
+쓰이는 키워드는 영어 표기를 그대로 두는 편이 좋습니다.
 
 - `preferences.md` — 허용/제외 직무명, 지역(+ Aiming 회사에만 적용되는 확장
   지역), 산업(강/약/회피), 24시간 기준, 이메일 컷(기본 70), 출력 언어,
@@ -425,21 +332,17 @@ Manager)처럼 실제 채용 사이트 검색에 쓰이는 키워드는 영어 �
   4시간)를 적으면, 그보다 먼 시간대에 묶인 remote 공고는 제외됩니다.
   Eligibility에는 못 갖추면 지원 자체가 무의미해지는 조건(필수 언어, work
   authorization)을 적습니다 — 여기 걸리는 공고는 점수를 매기기 전에
-  걸러집니다. 예시: [`preferences.example.md`](preferences.example.md).
+  걸러집니다. 시간대 차이 4시간과 이메일 컷 70은 검토할 기본값이고,
+  최신성 기준은 24시간으로 유지합니다.
 - `Companies` 탭 — 관심 회사 목록은 이 폴더가 아니라 구글 시트에서 직접
-  관리합니다. **Aiming** 표시(표시한 회사는 7일치 검색, 확장 지역, 채용
-  페이지 매일 확인)도 이 탭에 적고, 시스템이 자동 추가한 행에는 절대 붙지
-  않습니다. **Match Level**(`Strong`/`Soft`)은 `preferences.md`의 산업
-  분류를 따라 적으며 주간 딥스캔의 순서를 정합니다. 자동 추가 기준은
-  `config.md`의 Company discovery에서 관리합니다. 9열 계약과 각 열의 의미,
-  입력 형식: [`companies.example.md`](companies.example.md) (복사하지 않는
-  참고 자료).
+  관리합니다. 정확한 9개 열과 각 열의 의미는
+  [`companies.example.md`](companies.example.md), 자동 추가 기준은
+  `config.md`의 Company discovery에서 확인합니다.
 - `config.md` — 시트 ID, 이메일 수신자, 제목, 딥스캔 요일, tier당 회사 수
   제한 + **Alert delivery** + **Company discovery**. Alert delivery에는
   알림 일정(`Alert schedule: Daily at 09:00`처럼 cron이 아닌 자연어)과 알림
   시간대(`Alert timezone`)를 적습니다. Alert timezone은 실행의 "오늘" 날짜,
-  딥스캔 요일 판정, `Date Added`, 이메일·리포트 시각의 기준입니다. 예시:
-  [`config.example.md`](config.example.md).
+  딥스캔 요일 판정, `Date Added`, 이메일·리포트 시각의 기준입니다.
 
 시간대 값 2가지 유의점:
 

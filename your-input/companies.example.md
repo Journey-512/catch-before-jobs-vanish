@@ -43,5 +43,5 @@ The pipeline can register new companies it discovers by appending rows to
 this tab (Aiming left blank, Memo noting "Auto-added" and the date); those
 rows join the company searches from the next run. Whether auto-add is on,
 and the maturity bar a new company must clear, are settings in `config.md`
-— see [`config.example.md`](config.example.md). Existing rows are never
-modified: what you typed stays yours.
+— see the [`config.md` field guide](README.md#configmd--template--field-guide).
+Existing rows are never modified: what you typed stays yours.

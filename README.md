@@ -95,10 +95,9 @@ quick-start summary; the full walkthrough is [setup.md](setup.md).
    ([`your-input/companies.example.md`](your-input/companies.example.md)
    shows the format). The columns each tab needs are laid out in
    [setup.md, Step 2](setup.md#step-2--create-the-google-sheet).
-3. **Replace the example profile with yours.** [`your-input/`](your-input)
-   ships example files built around a fictional travel & mobility PM.
-   Copy two of them, drop `.example` from the name, and edit in your
-   details:
+3. **Fill in your profile and settings.** [`your-input/`](your-input) ships
+   two templates. Copy `preferences.template.md` to `preferences.md`
+   and `config.template.md` to `config.md`, then replace the placeholders:
 
    - `preferences.md` — target titles, locations, industries, exclusions,
      eligibility, the email score threshold, and the work-hours timezone
@@ -109,14 +108,15 @@ quick-start summary; the full walkthrough is [setup.md](setup.md).
 
    Your `cv.md` is generated, not copied: paste your existing CV's text
    into `your-input/cv-original.md`, have your agent convert it once into
-   the scoring file `cv.md`, and review the result yourself — the
-   copy-paste conversion request and review checklist are in
-   [setup.md, Step 3](setup.md#step-3--fill-in-your-input). The remaining
-   examples are references, not copy targets: `cv.example.md` shows what a
-   generated `cv.md` looks like, and `companies.example.md` shows the
-   `Companies` tab format (step 2). Paste the Sheet ID you copied into
-   `config.md`. All personal files here are covered by `.gitignore`, so
-   your real CV and settings never reach GitHub.
+   the scoring file `cv.md`, and review the result yourself. The
+   [`your-input` guide](your-input/README.md) contains the conversion request,
+   review checklist, and field explanations.
+   `cv.example.md` shows a generated `cv.md`, and `companies.example.md`
+   shows the `Companies` tab format (step 2); both are references, not files
+   to copy. The templates contain only runtime values, so the daily run does
+   not reread the guide. Paste the Sheet ID you copied into `config.md`.
+   All personal files here are covered by
+   `.gitignore`, so your real CV and settings never reach GitHub.
 4. **Hook the pipeline up to your agent.** In Claude Code, two commands
    install the `job-alert` skill:
 
@@ -242,12 +242,12 @@ catch-before-jobs-vanish/
 ├── .claude-plugin/                  config files for installing as a Claude Code plugin
 ├── docs/
 │   └── skill.ko-KR.md               Korean guide to how the pipeline works
-├── your-input/                      your personal input area — CV, preferences, config (gitignored — only examples are public)
+├── your-input/                      your personal input area — real inputs gitignored; templates and examples public
 │   ├── README.md                    what goes in each file, and how
 │   ├── companies.example.md         reference for filling the Companies tab — never copied locally
-│   ├── config.example.md            copy to config.md
+│   ├── config.template.md           copy target for config.md
 │   ├── cv.example.md                what a generated cv.md looks like — reference, not copied
-│   └── preferences.example.md       copy to preferences.md
+│   └── preferences.template.md      copy target for preferences.md
 ├── LICENSE                          MIT
 └── .gitignore                       keeps your real personal files out of the repo
 ```
