@@ -31,8 +31,10 @@ private/
 draft/
 
 # Scheduler / automation artifacts that contain personal info
-# NOTE: the public template scheduler-prompt-template.md is intentionally NOT ignored.
+# NOTE: the packaged public skill (skills/job-alert/SKILL.md) is tracked; any
+# other SKILL.md — e.g. a personal operational copy dropped nearby — stays ignored.
 SKILL.md
+!skills/job-alert/SKILL.md
 scheduler-prompt.md
 sheet-id.txt
 

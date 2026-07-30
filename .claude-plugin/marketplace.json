@@ -1,0 +1,11 @@
+{
+  "name": "catch-before-jobs-vanish",
+  "owner": { "name": "Journey MJ Lee" },
+  "plugins": [
+    {
+      "name": "catch-before-jobs-vanish",
+      "source": "./",
+      "description": "Daily job-alert agent: fresh PM/PO postings, evidence-based fit scoring, one email digest."
+    }
+  ]
+}

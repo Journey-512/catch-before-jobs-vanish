@@ -7,6 +7,45 @@ the version history is part of the product here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versions track generations of
 the pipeline logic.
 
+## [3.1.0] — 2026-07-30
+
+Packaging only — zero logic changes. The v3 prompt became an installable
+Claude Skill; the pipeline itself is unchanged from 3.0.0.
+
+### Added
+
+- **Claude Skills packaging.** The daily prompt now lives at
+  [`skills/job-alert/SKILL.md`](skills/job-alert/SKILL.md), and the new
+  `.claude-plugin/` manifests make the repo installable in two commands:
+
+  ```
+  /plugin marketplace add Journey-512/catch-before-jobs-vanish
+  /plugin install catch-before-jobs-vanish@catch-before-jobs-vanish
+  ```
+
+- **`docs/skill.ko-KR.md`** — the Korean commentary that lived inside the
+  template file, moved out whole.
+
+### Changed
+
+- **The rubric moved into the skill folder** —
+  `docs/fit-scoring-rubric.md` → `skills/job-alert/fit-scoring-rubric.md` —
+  because Step 5 reads it at runtime, so it ships with the skill. The one
+  line of the prompt that changed is that path. `your-input/` stays outside
+  the skill folder on purpose: a skill update replaces the folder, and
+  personal data must never travel with it.
+- **`setup.md`** now shows two ways to hand the pipeline to your agent: the
+  two-command skill install (Claude Code) and the copy-paste scheduler
+  prompt (Cowork and any other agent).
+
+### Removed
+
+- **`scheduler-prompt-template.md`** — the file, not the prompt. Its English
+  block moved verbatim into `skills/job-alert/SKILL.md`; its Korean half into
+  `docs/skill.ko-KR.md`.
+- **`docs/architecture.md`** — retired from the public tree (it stays in git
+  history); the runtime needs only the rubric.
+
 ## [3.0.0] — 2026-07-28
 
 The pipeline ran daily in production for a month — evolving into the private
@@ -22,7 +61,7 @@ that month proved and disproved.
   requirements and grades them against written evidence in `cv.md` (credit
   grades Direct/Adjacent/Weak/Missing, weighted toward differentiating
   requirements, with caps that override the total). See
-  [`docs/fit-scoring-rubric.md`](docs/fit-scoring-rubric.md).
+  [`docs/fit-scoring-rubric.md`](skills/job-alert/fit-scoring-rubric.md).
 - **Three rules tightened by the backtest** (past real applications, outcomes
   known): generic PM competencies may never be promoted to must-have (they
   saturated the evidence score and discriminated nothing); below-level
@@ -112,11 +151,49 @@ company watchlist with a quality gate; draft-then-send email.
 [Keep a Changelog](https://keepachangelog.com/)를 따르고, 버전 번호는
 파이프라인 로직의 세대를 나타냅니다.
 
+## [3.1.0] — 2026-07-30
+
+패키징 릴리스 — 로직 변경 0. v3 프롬프트를 설치형 Claude Skill로 포장했고
+파이프라인 자체는 3.0.0 그대로입니다.
+
+### 새로 생긴 것
+
+- **Claude Skills 패키징.** 매일 도는 프롬프트가
+  [`skills/job-alert/SKILL.md`](skills/job-alert/SKILL.md)로 들어갔고 새로 생긴
+  `.claude-plugin/` manifest 덕에 명령 두 줄로 설치됩니다:
+
+  ```
+  /plugin marketplace add Journey-512/catch-before-jobs-vanish
+  /plugin install catch-before-jobs-vanish@catch-before-jobs-vanish
+  ```
+
+- **`docs/skill.ko-KR.md`** — template 파일 안에 있던 한국어 해설을 통째로 옮긴
+  문서.
+
+### 바뀐 것
+
+- **기준표가 스킬 폴더 안으로** — `docs/fit-scoring-rubric.md` →
+  `skills/job-alert/fit-scoring-rubric.md`. Step 5가 실행 중에 읽는 파일이라
+  스킬과 한 묶음이어야 해서입니다. 프롬프트에서 바뀐 줄은 이 경로 하나뿐입니다.
+  `your-input/`은 일부러 스킬 폴더 밖에 둡니다. 스킬 업데이트는 폴더를 통째로
+  교체하는데, 개인 데이터까지 딸려 가면 안 되니까요.
+- **`setup.md`** — 에이전트에 파이프라인을 넘기는 두 가지 방법을 나란히
+  적었습니다: 명령 두 줄 스킬 설치(Claude Code)와 복사해 붙여넣기(Cowork 등
+  다른 에이전트).
+
+### 없어진 것
+
+- **`scheduler-prompt-template.md`** — 파일이 없어진 것이지 프롬프트가 없어진 게
+  아닙니다. 영어 블록은 `skills/job-alert/SKILL.md`로 그대로 옮겼고 한국어
+  해설은 `docs/skill.ko-KR.md`가 됐습니다.
+- **`docs/architecture.md`** — 공개 repo에서 뺐습니다 (git 역사에는 남습니다).
+  실행에 필요한 문서는 기준표뿐입니다.
+
 ## [3.0.0] — 2026-07-28
 
 파이프라인을 한 달간 매일 실운영했고(그 사이 아래의 비공개 2.x 세대로
 진화했습니다), 채점을 과거 실제 지원의 결과로 백테스트했습니다. 이 릴리스는
-그 한 달이 증명한 것과 반증한 것을 중심으로 템플릿과 문서를 다시 쓴 것입니다.
+그 한 달이 증명한 것과 반증한 것을 중심으로 template과 문서를 다시 쓴 것입니다.
 
 ### 바뀐 것
 
@@ -168,7 +245,7 @@ company watchlist with a quality gate; draft-then-send email.
 ### 없어진 것
 
 - **시트 PRD 탭.** v1은 시트 안에 "충돌 시 우선"인 두 번째 규칙 표면을 뒀고, 그
-  결과가 반쪽만 고쳐지는 규칙이었습니다. 이제 시트에는 기록만 — 로직은 템플릿에,
+  결과가 반쪽만 고쳐지는 규칙이었습니다. 이제 시트에는 기록만 — 로직은 template에,
   데이터는 `your-input/`에.
 - **48시간 중복 창** (위 참조).
 - `config.md`의 안 쓰이던 career-memory 폴더 줄 — 런타임이 읽지 않던 v1 잔재.

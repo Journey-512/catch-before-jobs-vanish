@@ -68,7 +68,7 @@ One line per skill, syntax: `skill: one-line scope. [req type] = [max credit]`
 ```
 
 The **Skill calibration** section is the anti-inflation control described in
-[`../docs/fit-scoring-rubric.md`](../docs/fit-scoring-rubric.md). An agent may
+[`../skills/job-alert/fit-scoring-rubric.md`](../skills/job-alert/fit-scoring-rubric.md). An agent may
 draft it from your CV — you confirm it (that sign-off is the point). It also
 works empty: scoring then runs on the "as written, never above" meta-rule
 alone. Full example: [`cv.example.md`](cv.example.md).
@@ -174,7 +174,7 @@ Sheet and register the scheduled task.
 
 > **개인정보:** 이 폴더 안의 파일은 이 README와 `.gitkeep`, `*.example.md`를
 > 빼면 전부 gitignore 처리됩니다. 실제 이력서·선호·회사 목록·설정은 커밋되거나
-> 푸시되지 않습니다. 정확한 규칙은 레포 루트의 `.gitignore`에서 확인하세요.
+> 푸시되지 않습니다. 정확한 규칙은 repo 루트의 `.gitignore`에서 확인하세요.
 
 ## 가장 빠른 시작: 예시 복사하기
 

@@ -125,16 +125,37 @@ real `cv.md` / `preferences.md` / `companies.md` / `config.md` are on git's
 ignore list (only the `*.example.md` versions are public), so your personal
 data never gets pushed.
 
-## Step 4 — Register the scheduled task
+## Step 4 — Hand the pipeline to your agent
 
-1. Open [`scheduler-prompt-template.md`](scheduler-prompt-template.md).
-2. Copy the prompt block.
+Two routes to the same place — pick the one that matches your agent. Either
+way, the schedule itself lives in your agent and should match `config.md`:
+the default `0 9 * * *` is cron notation for "every day at 9:00 AM" — use
+your own timezone and preferred hour.
+
+**Skill install — if your agent is Claude Code.** Run these two commands
+inside Claude Code:
+
+```
+/plugin marketplace add Journey-512/catch-before-jobs-vanish
+/plugin install catch-before-jobs-vanish@catch-before-jobs-vanish
+```
+
+That registers the pipeline as the `job-alert` skill. Then create your
+scheduled task with a one-line prompt — ask it to run the `job-alert` skill
+and say where your clone is, e.g. *"Run the job-alert skill; my repo is at
+`C:\Users\me\catch-before-jobs-vanish`"*. The path is how the skill finds
+your `your-input/`.
+
+**Copy-paste — Cowork and any other agent** (the route the author's own
+daily runs use).
+
+1. Open [`skills/job-alert/SKILL.md`](skills/job-alert/SKILL.md).
+2. Copy the prompt block (on GitHub, the copy button in the block's corner
+   grabs the whole thing).
 3. Replace the one repo-path placeholder in Step 0 with your local clone path
    so it can find `your-input/`. **Make no other edits** — everything else is
    read at runtime.
-4. Create a scheduled task in your agent with that prompt and a schedule
-   matching `config.md`. The default `0 9 * * *` is cron notation for "every
-   day at 9:00 AM" — use your own timezone and preferred hour.
+4. Create a scheduled task in your agent with that prompt.
 
 In Cowork mode you can just say: *"Run this prompt every day at 9 AM"* and
 paste the block.
@@ -225,7 +246,7 @@ git이 낯설면 GitHub 페이지에서 **Code → Download ZIP**으로 내려�
 ## 2단계 — 구글 시트 만들기
 
 **탭 2개**짜리 새 구글 시트를 만듭니다. 시트에는 기록만 쌓입니다. 규칙은 전부
-프롬프트 템플릿과 `your-input/`에 있어서 시트 쪽에는 더 설정할 것이 없습니다.
+프롬프트 template과 `your-input/`에 있어서 시트 쪽에는 더 설정할 것이 없습니다.
 
 **`Jobs`** — 10열:
 
@@ -309,16 +330,36 @@ cd ..
 목록(.gitignore)에 들어 있습니다(`*.example.md`만 공개). 개인 데이터가 GitHub에
 올라갈 일은 없습니다.
 
-## 4단계 — 예약 작업 등록
+## 4단계 — 에이전트에 파이프라인 넘기기
 
-1. [`scheduler-prompt-template.md`](scheduler-prompt-template.md)를 엽니다.
-2. 프롬프트 블록을 복사합니다.
-3. `your-input/`을 찾을 수 있도록, Step 0의 레포 경로 자리표시자 한 곳만 본인
+방법은 두 가지입니다. 본인 에이전트에 맞는 쪽을 고르세요. 어느 쪽이든 실행
+일정은 에이전트에서 정하고 `config.md`와 맞춥니다. 기본값 `0 9 * * *`는
+"매일 오전 9시"라는 뜻의 cron 표기입니다. 본인 시간대와 원하는 시각으로
+바꾸면 됩니다.
+
+**스킬 설치 — 에이전트가 Claude Code라면.** Claude Code 안에서 명령 두 줄을
+실행합니다:
+
+```
+/plugin marketplace add Journey-512/catch-before-jobs-vanish
+/plugin install catch-before-jobs-vanish@catch-before-jobs-vanish
+```
+
+그러면 파이프라인이 `job-alert` 스킬로 등록됩니다. 예약 작업은 한 줄이면
+됩니다. "job-alert 스킬을 실행해줘. 내 repo는
+`C:\Users\<본인>\catch-before-jobs-vanish`"처럼 스킬 실행과 본인 repo 경로를
+함께 말해 주세요. 스킬은 그 경로로 `your-input/`을 찾습니다.
+
+**복사해 붙여넣기 — Cowork 등 다른 에이전트라면.** (만든 사람도 매일 이
+방식으로 돌립니다.)
+
+1. [`skills/job-alert/SKILL.md`](skills/job-alert/SKILL.md)를 엽니다.
+2. 프롬프트 블록을 복사합니다 (GitHub에서는 블록 모서리의 복사 버튼을 누르면
+   한 번에 됩니다).
+3. `your-input/`을 찾을 수 있도록, Step 0의 repo 경로 자리표시자 한 곳만 본인
    폴더 경로로 바꿉니다. **다른 부분은 손대지 마세요** — 나머지는 실행할 때
    읽어옵니다.
-4. 그 프롬프트로 에이전트에 예약 작업을 만듭니다. 일정은 `config.md`와 맞추세요.
-   기본값 `0 9 * * *`는 "매일 오전 9시"라는 뜻의 cron 표기입니다 — 본인 시간대와
-   원하는 시각으로 바꾸면 됩니다.
+4. 그 프롬프트로 에이전트에 예약 작업을 만듭니다.
 
 Cowork 모드에서는 그냥 *"이 프롬프트를 매일 오전 9시에 실행해줘"*라고 말하고
 블록을 붙여넣어도 됩니다.

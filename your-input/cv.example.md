@@ -51,7 +51,7 @@ safety, customer-support tooling
 
 ## Skill calibration
 The anti-inflation list the scorer must respect — see
-[`docs/fit-scoring-rubric.md`](../docs/fit-scoring-rubric.md) ("Skill
+[`skills/job-alert/fit-scoring-rubric.md`](../skills/job-alert/fit-scoring-rubric.md) ("Skill
 calibration"). Each line uses the syntax:
 `skill: one-line scope. [requirement type] = [max credit]`.
 An agent may draft this section from your CV; **you confirm it**.
