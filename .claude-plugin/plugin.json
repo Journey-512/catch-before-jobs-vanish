@@ -1,6 +1,6 @@
 {
   "name": "catch-before-jobs-vanish",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Daily job-alert agent for Claude: collects fresh PM/PO postings, scores fit with an evidence-based rubric, emails one digest.",
   "author": { "name": "Journey MJ Lee" },
   "homepage": "https://github.com/Journey-512/catch-before-jobs-vanish",

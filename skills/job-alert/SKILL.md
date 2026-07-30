@@ -184,6 +184,11 @@ let the outcome loop judge empirically whether these convert.
   column that can contain blanks, a blank cell reads as false end-of-data;
   re-verify the target row's company/title immediately before writing; never
   trust an earlier snapshot — the owner edits this sheet by hand between runs.
+- Write-verify (after every write): read back the rows you just wrote and
+  confirm they landed exactly where intended — a write can land offset from
+  its target (e.g. one row off), silently overwriting a neighboring row.
+  If it did, restore the overwritten data and redo the write before
+  proceeding.
 - Jobs tab, 10 columns: Date Added ("YYYY-MM-DD HH:MM", your timezone) |
   Company | Job Title | Location | Source | Posted Date | Link | Status |
   Fit Score | Fit Reason.

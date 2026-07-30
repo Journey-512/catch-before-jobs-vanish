@@ -7,6 +7,22 @@ the version history is part of the product here. Format follows
 [Keep a Changelog](https://keepachangelog.com/); versions track generations of
 the pipeline logic.
 
+## [3.1.1] — 2026-07-30
+
+One rule promoted from a production incident the same day: a sheet write
+landed one row above its target and silently overwrote an existing row
+(the row was restored). Pre-write checks could not have caught it — the
+write itself missed.
+
+### Added
+
+- **Write-verify rule (Step 8).** After every sheet write, read back the
+  rows just written and confirm they landed exactly where intended; if a
+  write landed offset, restore the overwritten data and redo the write
+  before proceeding. Write-safety previously ended at pre-write checks;
+  this incident showed the write itself can miss, so verification now
+  brackets the write on both sides.
+
 ## [3.1.0] — 2026-07-30
 
 Packaging only — zero logic changes. The v3 prompt became an installable
@@ -150,6 +166,20 @@ company watchlist with a quality gate; draft-then-send email.
 버전 이력 자체가 제품의 일부입니다. 형식은
 [Keep a Changelog](https://keepachangelog.com/)를 따르고, 버전 번호는
 파이프라인 로직의 세대를 나타냅니다.
+
+## [3.1.1] — 2026-07-30
+
+같은 날 실운영 사고에서 승격된 규칙 1개입니다. 시트 쓰기가 목표보다 한 행
+위에 들어가 기존 행 1개를 조용히 덮었습니다 (해당 행은 복원 완료). 쓰기 전
+확인만으로는 못 잡는 사고였습니다. 쓰기 자체가 빗나갔으니까요.
+
+### 새로 생긴 것
+
+- **write-verify 규칙 (8단계).** 시트에 쓴 다음, 방금 쓴 행을 다시 읽어
+  의도한 위치에 정확히 들어갔는지 확인하고, 어긋났으면 덮인 데이터를
+  복원하고 다시 쓴 뒤에 진행합니다. 기존 write-safety는 쓰기 전 확인에서
+  끝났는데, 이번 사고가 보여준 것은 쓰기 자체가 빗나갈 수 있다는 사실이라,
+  이제 확인이 쓰기의 앞뒤를 모두 감쌉니다.
 
 ## [3.1.0] — 2026-07-30
 
