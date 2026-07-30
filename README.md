@@ -4,19 +4,19 @@
 
 **Language:** English · [한국어](README.ko-KR.md)
 
-I built this while job-hunting in the EU: fresh postings kept vanishing from
-LinkedIn's "last 24 hours" search before I ever saw them. So I turned the
-chase into a scheduled agent, with one promise: **if a posting that truly
-fits you goes up, you hear about it within 24 hours — before it disappears.**
+**Good postings close fast. Catch them before they vanish.**
 
-Every morning it searches LinkedIn + Indeed and the careers pages of the
-companies I'm actively gunning for, scores each posting against the evidence
-in my CV on a 100-point rubric, verifies that top matches are still open, and emails me only what's
-worth my time. The rubric isn't guesswork: it was corrected by a backtest of
-**29 of my real applications with known outcomes, including CV screens passed
-at Uber and Google**. Built and run with [Claude](https://claude.com) in
-Cowork mode. The name is the problem statement: **catch them before they
-vanish**.
+**This project has one goal: find the postings that truly fit your career,
+within 24 hours of going up.** It doesn't flood you with keyword matches
+like a LinkedIn alert, and it doesn't submit applications for you like an
+auto-apply bot. Instead, it checks each posting's key requirements against
+the experience and results recorded in your CV, scores it out of 100, and
+keeps only what clears the bar. That rubric isn't a made-up rule set: it was
+backtested and calibrated on **past real applications with known outcomes,
+including CV screens passed at Uber and Google**. Once set up, it runs
+itself as a scheduled [Claude](https://claude.com) task — every day it
+checks LinkedIn, Indeed, and your target companies' careers pages, then
+sends one email with the recommended postings and their scores.
 
 > **v3 (2026-07).** Rewritten after a month of daily production runs and the
 > backtest above. What changed and why: [`CHANGELOG.md`](CHANGELOG.md).
@@ -44,12 +44,9 @@ Think of it as hiring a headhunter who works only for you. It watches the
 market every morning and points your attention at the postings your career
 evidence actually supports.
 
-Against the usual alternatives: a LinkedIn saved search pings you with
-everything and ranks nothing, and an auto-apply bot sprays applications you
-would never have chosen. This tool sits deliberately between the two — and it
-does **not** apply for you. Its job is to make sure you never miss the window
-and never waste a morning re-searching; applying is judgment, and the
-judgment stays yours.
+And it does **not** apply for you — on purpose. Its job ends at making sure
+you never miss the window and never waste a morning re-searching; applying
+is judgment, and the judgment stays yours.
 
 Plenty of projects publish agent prompts — that part is commodity. What this
 repo adds is the **operating record**: a public rubric that a month of daily
@@ -226,8 +223,9 @@ read/write a Google Sheet, send email, and run on a daily schedule.
 
 ## About
 
-I'm a product manager. I built this for my own EU job search, and it has run
-every morning since. The longer build story — the decisions, failures, and
+I'm a product manager. I built this during my own EU job search; the
+pipeline has run every morning since, and it's public so that any PM in the
+same spot can run it too. The longer build story — the decisions, failures, and
 recoveries behind it — is being written up separately; a link will be added
 here once it's published.
 
@@ -238,7 +236,8 @@ here once it's published.
   service behind it, and the author never collects, stores, or accesses any
   of your data — postings, Sheet, and email all stay with you.
 - Collection is documented at concept level; you are responsible for
-  complying with each site's terms of service.
+  complying with each site's terms of service, and for any account
+  restrictions that follow from breaking them.
 - Fit scores are a prioritization signal, not a prediction of screening
   outcomes.
 - An AI agent acts on your behalf here — reviewing what it wrote and sent
