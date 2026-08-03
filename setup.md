@@ -57,9 +57,12 @@ equivalent to:
 cd "<path-to-your-extracted-catch-before-jobs-vanish-main-folder>"
 ```
 
-The terminal path should now end with `catch-before-jobs-vanish-main`. Keep
-that terminal open; the `cd your-input` command in Step 3 starts from this
-folder.
+Check that you landed in the right folder: run `dir` (Windows) or `ls`
+(macOS) and confirm `setup.md` and a `your-input` folder are listed. If they
+are not, you are one level too high — Windows Explorer often places the repo
+folder inside another folder of the same name, so open that folder and drag
+the inner one in instead. Keep that terminal open; the `cd your-input`
+command in Step 3 starts from this folder.
 
 ## Step 2 — Create the Google Sheet
 
@@ -197,8 +200,9 @@ check the following:
 2. `Posted Date` is an absolute `YYYY-MM-DD` date and carries an
    `estimated` or `unknown` label when needed. It must never store a relative
    value such as `Last 24h`.
-3. Each link is a posting-specific `jobs/view/{id}` permalink, not a search
-   URL.
+3. Each link points to one specific posting, not a search results page.
+   LinkedIn rows use the `jobs/view/{id}` permalink form; Indeed rows and
+   careers-page rows carry their own posting URLs.
 4. The email includes **Top / Strong** postings, a prompt to review any
    auto-added companies, and a link to the Sheet.
 5. Location violations found in the full job description are recorded as
@@ -325,8 +329,11 @@ Download ZIP**을 선택해 압축을 푸세요. GitHub에서 받은 압축 파�
 cd "<압축을-푼-catch-before-jobs-vanish-main-폴더의-전체-경로>"
 ```
 
-터미널 경로 끝에 `catch-before-jobs-vanish-main`이 표시되는지 확인하고 이
-터미널을 계속 사용하세요. 3단계의 `cd your-input`은 이 폴더에서 시작합니다.
+제대로 된 폴더에 들어왔는지 확인하세요. `dir`(Windows) 또는 `ls`(macOS)를
+입력했을 때 `setup.md`와 `your-input` 폴더가 보이면 맞습니다. 보이지 않으면 한
+단계 위에 있는 것입니다. Windows 탐색기는 같은 이름의 폴더 안에 저장소 폴더를
+한 번 더 만드는 경우가 많으니, 그 폴더를 열어 안쪽 폴더를 다시 끌어오세요. 이
+터미널은 계속 사용합니다. 3단계의 `cd your-input`은 이 폴더에서 시작합니다.
 
 ## 2단계 — 구글 시트 만들기
 
@@ -463,7 +470,9 @@ Cowork에서는 프롬프트를 붙여넣고 `이 프롬프트를 Asia/Seoul 기
 2. `Posted Date`가 `YYYY-MM-DD` 절대 날짜로 저장되고, 필요한 경우
    `estimated` 또는 `unknown` 표시가 붙는지 확인합니다. `Last 24h` 같은 상대
    표현은 저장되면 안 됩니다.
-3. 링크가 검색 URL이 아니라 공고별 `jobs/view/{id}` 영구 링크인지 확인합니다.
+3. 링크가 검색 결과 페이지가 아니라 공고 하나를 가리키는지 확인합니다.
+   LinkedIn 공고는 `jobs/view/{id}` 형태의 영구 링크이고, Indeed와 회사 채용
+   페이지 공고는 각자의 공고 URL을 사용합니다.
 4. 이메일에 **Top / Strong** 공고, 자동 추가된 회사를 검토할 수 있는 안내와
    시트 링크가 포함되어 있는지 확인합니다.
 5. 채용공고 본문에서 확인된 지역 조건 위반 공고가 시트에는
