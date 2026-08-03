@@ -158,10 +158,9 @@ Evidence           = 55 x 7.1 / 10                            = 39.05
 | Principal / Staff stretch (one level above) | 11 |
 | Mid-level / below your level (**downlevel**) | 8 + add a "downlevel warning" to the Fit Reason |
 
-*Why downlevel scores below stretch: in the backtest, cold applications to
-below-level roles are screened out more reliably — screeners reject overqualified
-profiles more reliably than they reject stretch candidates. v1 gave mid-level
-roles 15 points, which pointed the wrong way.*
+*Why downlevel scores below stretch: screeners reject overqualified profiles
+more reliably than they reject stretch candidates. v1 gave mid-level roles 15
+points, which pointed the wrong way.*
 
 ### Company — 15
 

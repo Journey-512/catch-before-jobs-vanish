@@ -156,8 +156,9 @@ that month proved and disproved.
 - **Three rules tightened by the backtest** (past real applications, outcomes
   known): generic PM competencies may never be promoted to must-have (they
   saturated the evidence score and discriminated nothing); below-level
-  postings score 8/20 with a "downlevel warning" (cold applications to
-  below-level roles are screened out more reliably — v1 pointed the other way);
+  postings score 8/20 with a "downlevel warning" (screeners reject
+  overqualified profiles more reliably than stretch candidates — v1 pointed
+  the other way);
   referral applications carry a `(referral)` status suffix so pass-rate
   denominators stay clean.
 - **Email cutoff 60 → 70, "Maybe" tier retired.** With calibrated scoring,
@@ -366,7 +367,7 @@ timezone`과 `Maximum timezone difference`로 바꿉니다. 새 필드가 없으
 ## [3.0.0] — 2026-07-28
 
 파이프라인을 한 달간 매일 실운영했고(그 사이 아래의 비공개 2.x 세대로
-진화했습니다), 채점을 과거 실제 지원의 결과로 백테스트했습니다. 이 릴리스는
+진화했습니다), 채점을 과거 실제 지원 결과로 백테스트했습니다. 이 릴리스는
 그 한 달이 증명한 것과 반증한 것을 중심으로 template과 문서를 다시 쓴 것입니다.
 
 ### 바뀐 것
@@ -375,10 +376,10 @@ timezone`과 `Maximum timezone difference`로 바꿉니다. 새 필드가 없으
   공고 대부분이 비슷한 일반 요건을 공유해 점수가 한 구간에 몰렸습니다. v3는
   JD의 실제 요구사항을 뽑아 `cv.md`의 증거와 대조합니다 (credit 4등급, 차별
   요건 가중, 총점을 덮어쓰는 cap).
-- **백테스트가 조인 규칙 3개** (과거 실제 지원): 일반 PM 역량의 must-have 승격
-  금지 (Evidence를 포화시켜 변별 0) · 다운레벨 공고 8/20 + 경고 (cold 다운레벨
-  지원 서류에서 걸러지기 쉬움 — v1 배점은 방향이 반대였음) · 리퍼럴 지원의 `(referral)`
-  접미 (통과율 분모 오염 방지).
+- **백테스트가 조인 규칙 3개** (과거 실제 지원, 결과 확인됨): 일반 PM 역량의
+  must-have 승격 금지 (Evidence를 포화시켜 변별 0) · 다운레벨 공고 8/20 + 경고
+  (스크리너는 스트레치 후보보다 오버스펙 프로필을 더 확실하게 거름 — v1 배점은
+  방향이 반대였음) · 리퍼럴 지원의 `(referral)` 접미 (통과율 분모 오염 방지).
 - **이메일 컷 60 → 70, "Maybe" 등급 폐지.** 보정된 채점에서 60-69는
   받은편지함의 소음이었습니다. 시트엔 계속 기록되고, 컷은 `preferences.md`에서
   자유롭게 바꾸는 개인 설정입니다.

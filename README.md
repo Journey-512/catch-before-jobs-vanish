@@ -62,7 +62,7 @@ candidates and checks them one by one against the experience and results in
 your CV. Competencies that fit everyone are excluded from scoring, and a
 must-have with no supporting evidence keeps a posting below the
 recommendation bar no matter how strong the rest looks. The rubric was
-calibrated through a month of daily production runs and a backtest of 29
+calibrated through a month of daily production runs and a backtest of past
 real applications with known outcomes, including CV screens passed at Uber
 and Google. The score is a priority signal for where to apply, not a
 prediction of passing — and every posting comes with a Fit Reason laying
