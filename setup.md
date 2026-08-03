@@ -1,105 +1,118 @@
 # Setup
 
-**Language:** English (below) · [한국어](#설정-한국어)
+**Language:** English · [한국어](#설정-한국어)
 
-A step-by-step guide to running `catch-before-jobs-vanish` for yourself. Plan
-on about 30 minutes the first time.
+A step-by-step guide to running `catch-before-jobs-vanish` for yourself. Set
+it up once in about 10 minutes; after that, a scheduled AI agent runs it
+automatically every day with no manual work.
 
 ## Prerequisites
 
-This system is not a program you install — it's a **work order that an AI
-agent runs every morning**. So there's no server to rent and no code to set
-up. What you need:
+This is not an installed application. It is a **work order that an AI agent
+runs every day**. Prepare these three things:
 
-- **An AI agent that can run scheduled tasks.** Built and tested with
-  **Claude in Cowork mode**, which has scheduling built in.
-- **Three connectors enabled in Claude.** A connector is Claude's official
-  way of plugging into another service on your account — you switch them on
-  in Claude's settings:
-  - **Chrome** — opens job sites and reads postings.
+- **An AI agent that can run scheduled tasks.** This system was built and
+  tested with **Claude in Cowork mode**, which includes scheduling.
+- **Three Claude connectors.** Enable them in Claude's settings:
+  - **Chrome** — checks LinkedIn, Indeed, and company careers pages.
   - **Google Drive** — reads and writes the Google Sheet that stores results.
-  - **Gmail** — sends you the morning alert email.
-- **A Google account** (the Sheet lives there) and an email address for the
-  alerts.
+  - **Gmail** — sends the results email.
+- **A Google account and an email address for alerts.** Create the Sheet in
+  the account connected through the Google Drive connector.
 
-Using a different agent? It needs the same four abilities: browse the web,
-read/write a Google Sheet, send email, and run on a daily schedule.
+> **Why Chrome?** The browser-based route is deliberate: non-developers can
+> start without configuring API keys or authentication code. If you have
+> development experience and official API access to the job sites, you can
+> replace the collection stage with an API-based route. This repository does
+> not include API integration code, so preserve the same link, date, and
+> dedup contracts.
+
+You can use another AI agent as long as it can browse the web, read and write
+a Google Sheet, send email, and run on a daily schedule.
 
 ## Step 1 — Get the repo
 
+Run these commands in a **terminal**, not in a repository file.
+
+- On Windows, open **PowerShell** or **Windows Terminal** from the Start menu.
+- On macOS or Linux, open **Terminal**.
+
+Paste the following lines one at a time and press Enter:
+
 ```bash
-git clone https://github.com/<your-username>/catch-before-jobs-vanish.git
+git clone https://github.com/Journey-512/catch-before-jobs-vanish.git
 cd catch-before-jobs-vanish
 ```
 
-New to git? On the GitHub page, **Code → Download ZIP** works too — unzip it
-anywhere and everything below is the same.
+If the `git` command is unavailable or Git is unfamiliar, select **Code →
+Download ZIP** on the GitHub page. Unzip it into any folder; the remaining
+steps are the same.
 
 ## Step 2 — Create the Google Sheet
 
-Make a new Google Sheet with **two tabs**. The two tabs hold different
-kinds of data: **`Jobs`** is posting history — every find, the dedup
-evidence, and the application outcomes you type. **`Companies`** is your
-company registry — the single source of truth for which companies the
-pipeline watches and how.
+Create a new Google Sheet and name its tabs exactly **`Jobs`** and
+**`Companies`**. The pipeline finds the tabs by these names.
 
-**`Jobs`** — 10 columns:
+### `Jobs` tab
+
+Enter these 10 columns in the first row, in this order:
 
 | Date Added | Company | Job Title | Location | Source | Posted Date | Link | Status | Fit Score | Fit Reason |
 |---|---|---|---|---|---|---|---|---|---|
 
-The `Status` column is shared: the system writes `Excluded (...)` / `Closed
-(date)`, and **you** write your application outcomes (`Applied`, `Passed - CV`,
-`Rejected - CV`, `Lost` — add a `(referral)` suffix for referral applications).
-Those hand-written statuses feed the outcome loop; the system never overwrites
-them.
+The system writes `Excluded (...)` or `Closed (date)` in the `Status`
+column. As your application progresses, enter `Applied`, `Passed - CV`,
+`Rejected - CV`, or `Lost`. For a referral application, append
+`(referral)`, as in `Applied (referral)`. The system never overwrites a
+value you entered.
 
-**`Companies`** — your company registry, 9 columns:
+### `Companies` tab
+
+Enter these 9 columns in the first row, in this order:
 
 | Index | Company | Aiming | Match Level | URL | Source site | HQ | Topics | Memo |
 |---|---|---|---|---|---|---|---|---|
 | 1 | `<Company name>` | `<Aiming or blank>` | `<Strong or Soft>` | `<careers URL or blank>` | `<source or blank>` | `<HQ or blank>` | `<topics or blank>` | `<note or blank>` |
 
-This tab is the **single source of truth for your company list** — there is
-no local companies file. Before the first run, enter your target companies
-directly into this tab, one row per company
-([`your-input/companies.example.md`](your-input/companies.example.md) is a
-format reference). The pipeline reads the tab at the start of every run: it
-drives the company-scoped searches, the Aiming checks, and the weekly deep
-scan. The pipeline also appends rows for new companies it discovers (if
-enabled in `config.md`) — auto-added rows join those searches from the next
-run, and values you typed in existing rows are never overwritten.
+The company list is filled in two ways:
 
-`Aiming` is a manual flag for the 1-3 companies you're actively gunning for.
-An Aiming company gets a wider search every run: a 7-day window instead of
-24h, your extended locations, and a direct careers-page check. Set it by hand
-only — auto-added rows always leave it blank.
+1. **Manual entry:** Before the first run, enter one target company per row.
+   For the 1-3 companies you are actively targeting, enter `Aiming` in the
+   `Aiming` column; leave it blank for the others. See
+   [`your-input/companies.example.md`](your-input/companies.example.md) for
+   the exact format and column definitions.
+2. **Automatic addition:** If auto-add is enabled under `Company discovery`
+   in `config.md`, the pipeline appends newly discovered companies that meet
+   your criteria. An auto-added row keeps `Aiming` blank and records only
+   confirmed values. The company joins company-scoped searches from the next
+   run.
+
+The `Companies` tab is the single source of truth for the company list.
+There is no local company-list file, and the pipeline never overwrites values
+you entered in an existing row.
 
 **Upgrading from an earlier version?** Your old `your-input/companies.md` is
-not read anymore — and nothing deletes it; it's your personal file. Move its
-rows into this tab: Name → Company, careers URL → URL, Match level → Match
-Level, Aiming → Aiming, note → Memo; fill the remaining columns only where
-you actually know the value. Check the tab against the old file to confirm
-everything moved, then decide yourself whether to archive or delete the
-file.
+no longer read, and the system does not delete it. Move its rows into this
+tab: Name → Company, careers URL → URL, Match level → Match Level, Aiming →
+Aiming, note → Memo. Compare the tab with the original file, then decide
+whether to keep or delete that file.
 
-**Where does the sheet go?** Anywhere in your Google Drive — any folder, any
-file name. The system finds it by **Sheet ID**, not by name or location. Copy
-the ID from the sheet's address bar:
+The Sheet can live in any Google Drive folder and use any file name. The
+system finds it by **Sheet ID**. Open the Sheet and check the address bar:
 
 ```
 https://docs.google.com/spreadsheets/d/THIS-LONG-STRING-IS-THE-ID/edit
 ```
 
-The long string between `/d/` and `/edit` is the Sheet ID. In the next step
-you'll paste it into `your-input/config.md` (the `Google Sheet ID:` line) —
-that's the only place it goes. The sheet just needs to sit in the same Google
-account your Drive connector uses.
+Copy the string between `/d/` and `/edit`. In the next step, paste it into
+`Google Sheet ID:` in `your-input/config.md`.
 
 ## Step 3 — Fill in `your-input/`
 
-Copy the folder's two clean **template files** — drop `.template` from the
-name and replace the angle-bracket placeholders with your details:
+Copy the two template files and replace the `< >` placeholders with your
+own values.
+
+macOS or Linux:
 
 ```bash
 cd your-input
@@ -108,100 +121,132 @@ cp config.template.md config.md
 cd ..
 ```
 
-(Windows PowerShell: `Copy-Item preferences.template.md preferences.md`,
-etc.)
+Windows PowerShell:
 
-The templates contain only runtime fields, placeholders, and defaults. Finish
-all three inputs with the [`your-input` guide](your-input/README.md), which
-contains the one-time CV conversion request and the field explanations.
+```powershell
+cd your-input
+Copy-Item preferences.template.md preferences.md
+Copy-Item config.template.md config.md
+cd ..
+```
 
-Continue only after `cv.md`, `preferences.md`, and `config.md` are ready.
+The [`your-input` guide](your-input/README.md) contains the one-time CV
+conversion request and the field explanations.
+
+Continue after `cv.md`, `preferences.md`, and `config.md` are ready.
 If you are upgrading, follow the [3.2 upgrade note](CHANGELOG.md#upgrade-note).
 
 ## Step 4 — Hand the pipeline to your agent
 
-Two routes to the same place — pick the one that matches your agent. Either
-way, the actual trigger lives in your agent's scheduled task, not in
-`config.md`: the pipeline never reads the `Alert schedule` line to create
-or change a schedule. Register the task to match `config.md`'s Alert
-delivery section — in plain language, no cron needed, e.g. "daily at 09:00
-in Asia/Seoul". Two things follow: if you later change the schedule or
-timezone in `config.md`, change the scheduler's registration too (editing
-the file alone updates nothing), and after registering, check that the
-scheduler's next-run time matches the local time you intended.
+Choose the route that matches your agent. The actual trigger is the
+**scheduled task registered in your agent**, not `config.md`.
 
-**Skill install — if your agent is Claude Code.** Run these two commands
-inside Claude Code:
+Register the schedule and timezone in plain language to match `Alert
+delivery` in `config.md`, for example: `daily at 09:00 in Asia/Seoul`.
+If you later change the schedule or timezone in `config.md`, update the
+scheduled task separately. After registration, confirm that the next run
+time matches the local time you intended.
+
+### Install the skill in Claude Code
+
+Run these two commands inside Claude Code:
 
 ```
 /plugin marketplace add Journey-512/catch-before-jobs-vanish
 /plugin install catch-before-jobs-vanish@catch-before-jobs-vanish
 ```
 
-That registers the pipeline as the `job-alert` skill. Then create your
-scheduled task with a one-line prompt — say the schedule, the timezone, and
-where your clone is, e.g. *"Run the job-alert skill daily at 09:00 in
-Asia/Seoul; my repo is at `C:\Users\me\catch-before-jobs-vanish`"*. The
-path is how the skill finds your `your-input/`.
+After installation, request a scheduled task that includes the schedule,
+timezone, and local repository path:
 
-**Copy-paste — Cowork and any other agent** (the route the author's own
-daily runs use).
+> Run the `job-alert` skill daily at 09:00 in Asia/Seoul. My repository is
+> at `C:\Users\me\catch-before-jobs-vanish`.
+
+Replace the example path with the folder where you downloaded the repository.
+
+### Register the prompt in Cowork or another agent
 
 1. Open [`skills/job-alert/SKILL.md`](skills/job-alert/SKILL.md).
-2. Copy the prompt block (on GitHub, the copy button in the block's corner
-   grabs the whole thing).
-3. Replace the one repo-path placeholder in Step 0 with your local clone path
-   so it can find `your-input/`. **Make no other edits** — everything else is
-   read at runtime.
-4. Create a scheduled task in your agent with that prompt.
+2. Copy the entire prompt block.
+3. Replace the repository-path placeholder in `Step 0` with your local path.
+4. Register it as a scheduled task **without changing anything else**.
 
-In Cowork mode you can just say: *"Run this prompt daily at 09:00 in
-Asia/Seoul"* and paste the block.
+In Cowork, paste the prompt and say: `Run this prompt daily at 09:00 in
+Asia/Seoul.`
 
 ## Step 5 — Test run
 
-Trigger the task once manually (or wait for the first scheduled fire). Check:
+Trigger the task once manually or wait for the first scheduled run, then
+check the following:
 
-- The `Jobs` tab gets new rows with absolute `Posted Date` values (YYYY-MM-DD,
-  never "Last 24h").
-- Links are `jobs/view/{id}` permalinks, not search URLs.
-- The email groups matches into **Top / Strong** (nothing below the cutoff),
-  lists any auto-added companies with a veto prompt, and links the Sheet.
-- Any location violations found inside a JD are in the Sheet as
-  `Excluded (...)` but **not** in the email.
-- Re-run on a quiet day (or with a deliberately narrow filter) and confirm the
-  **heartbeat**: zero matches still sends "No new matches. System alive."
+1. The `Jobs` tab has a new row and `Date Added` uses
+   `YYYY-MM-DD HH:MM` in the Alert timezone.
+2. `Posted Date` is an absolute `YYYY-MM-DD` date and carries an
+   `estimated` or `unknown` label when needed. It must never store a relative
+   value such as `Last 24h`.
+3. Each link is a posting-specific `jobs/view/{id}` permalink, not a search
+   URL.
+4. The email includes **Top / Strong** postings, a prompt to review any
+   auto-added companies, and a link to the Sheet.
+5. Location violations found in the full job description are recorded as
+   `Excluded (...)` in the Sheet and excluded from the email.
+6. Zero matches still sends the heartbeat message
+   `No new matches. System alive.` No email at all means the run or the send
+   failed.
 
 ## Step 6 — Tune (two feedback loops — don't mix them)
 
-1. **Calibration loop — is the scoring right?** A score looks off → read that
-   row's Fit Reason → add or tighten **one line** in `cv.md`'s Skill
-   calibration → the next run scores better. The prompt and rubric stay
-   frozen; only your data evolves.
-2. **Outcome loop — does the score predict anything?** Keep the Status column
-   current as you apply. The deep-scan day's report summarizes CV-pass rate
-   per score band (cold and referral separated). Only adjust preferences or
-   calibration on patterns with real sample sizes — check n first.
+1. **Calibrate the score:** If a score looks wrong, check that row's
+   `Fit Reason` and adjust one line in `Skill calibration` in `cv.md`.
+2. **Validate against outcomes:** Keep `Status` current as you apply. In the
+   weekly report, review CV-pass rates by score band, with cold and referral
+   applications kept separate.
 
-Routine knobs, anytime:
-
-- Too many / too few emails → the cutoff in `preferences.md` (70 is a default,
-  not a law).
-- Noise creeping in → the title allow/exclude lists.
-- Watchlist growing too fast or slow → the Company discovery settings in
-  `config.md`.
+Adjust email volume with `Cutoff` in `preferences.md`, title accuracy with
+the allow and exclude lists, and company auto-add scope with `Company
+discovery` in `config.md`. For scoring details, see the
+[fit-scoring rubric](skills/job-alert/fit-scoring-rubric.md).
 
 ## Troubleshooting
 
-| Symptom | Likely cause | Fix |
-|---|---|---|
-| Saved LinkedIn links go dead by afternoon | A search URL got saved instead of a permalink | Confirm the agent extracts per-posting `jobs/view/{id}` permalinks, not the search URL |
-| `Posted Date` says "Last 24h" | Relative label stored instead of parsed | Ensure Step 2 of the prompt parses to YYYY-MM-DD at capture |
-| Wrong company's job recovered | Trusted LinkedIn's auto-selected `currentJobId` | Parse the full result list and match by company + title |
-| The same posting keeps reappearing | Dedup can't see history (Sheet unreadable) or careers URLs not canonicalized | Check the email for the "history not checked" notice; verify one canonical URL format per careers site |
-| A company in your `Companies` tab never shows results | Company career page changed, or a broken company filter silently returns empty | Expected for careers pages (they change without notice) — the run falls back to job boards and discloses the gap; never trust an empty filter result without a keyword cross-check |
-| Aiming / company / deep-scan searches all skipped | The `Companies` tab couldn't be read, or its header drifted from the 9-column contract | The email names the skipped scope and reason; restore the 9-column header shown in Step 2, confirm the Sheet ID and sharing, then rerun |
-| No email at all | The run died, or the send failed | The heartbeat rule means silence = breakage: check the task ran, then check Drafts — draft-then-send leaves a draft behind on a failed send |
+### A LinkedIn link stops working after a few hours
+
+A search URL may have been saved. Confirm that the agent extracts the
+posting-specific `jobs/view/{id}` permalink.
+
+### `Posted Date` contains `Last 24h`
+
+The relative date was stored without conversion. Confirm that Step 2 of the
+prompt converts it to `YYYY-MM-DD` at capture time.
+
+### A posting from the wrong company was saved
+
+The run may have trusted LinkedIn's auto-selected `currentJobId`. Confirm
+that it parses the full result list and matches both company and title.
+
+### The same posting keeps reappearing
+
+The run may have failed to read Sheet history, or the same careers URL may
+use multiple formats. Check the email for a notice that history could not be
+checked, then standardize each careers site to one URL format.
+
+### A company in the `Companies` tab returns no postings
+
+The careers page or company filter may have changed. Check the email to
+confirm that the pipeline fell back to job boards, and cross-check an empty
+result with a keyword search.
+
+### All `Aiming`, company-scoped, and weekly deep-scan searches were skipped
+
+The `Companies` tab may be unreadable or its header may differ from the
+required 9-column structure. Restore the Step 2 header, verify the Sheet ID
+and sharing, then rerun. The generic LinkedIn and Indeed searches driven by
+`preferences.md` still run in this case.
+
+### No email arrives
+
+First confirm that the scheduled task ran, then check Gmail Drafts. A failed
+send may leave a draft behind.
 
 ---
 
@@ -211,99 +256,118 @@ Routine knobs, anytime:
 
 **언어:** [English](#setup) · 한국어
 
-`catch-before-jobs-vanish`를 직접 돌리는 단계별 안내입니다. 처음이면 30분
-정도 잡으세요.
+`catch-before-jobs-vanish`를 직접 실행하기 위한 단계별 안내입니다. 처음 한
+번만 약 10분 정도 설정하면, 이후에는 별도의 수동 작업 없이 예약된 AI
+에이전트가 매일 자동으로 실행합니다.
 
 ## 사전 준비
 
-이 시스템은 설치하는 프로그램이 아닙니다. **AI 에이전트가 매일 아침 실행하는
-작업 지시문**입니다. 그래서 서버를 빌릴 필요도, 코드를 만질 일도 없습니다.
-필요한 것은 세 가지입니다.
+이 시스템은 설치형 프로그램이 아니라 **AI 에이전트가 매일 실행하는 작업
+지시문**입니다. 다음 세 가지를 준비하세요.
 
-- **예약 작업(scheduled task)을 돌릴 수 있는 AI 에이전트.** 이 시스템은 Claude
-  **Cowork 모드**로 만들고 테스트했습니다. Cowork에는 예약 실행 기능이 들어
-  있습니다.
-- **Claude에 커넥터(connector) 3개 연결.** 커넥터는 Claude가 내 계정의 다른
-  서비스에 접근하도록 이어 주는 공식 연결 기능입니다. Claude 설정에서 켭니다:
-  - **Chrome** — 채용 사이트를 열어 공고를 읽을 때 씁니다.
-  - **Google Drive** — 결과를 기록하는 구글 시트를 읽고 쓸 때 씁니다.
-  - **Gmail** — 아침 알림 이메일을 보낼 때 씁니다.
-- **구글 계정 1개**(시트는 이 계정에 둡니다)와 알림 받을 이메일 주소.
+- **예약 작업을 실행할 수 있는 AI 에이전트.** 이 시스템은 예약 실행 기능이
+  있는 Claude **Cowork 모드**를 기준으로 만들고 테스트했습니다.
+- **Claude 커넥터 3개.** Claude 설정에서 다음 커넥터를 연결하세요.
+  - **Chrome** — LinkedIn, Indeed와 회사 채용 페이지를 확인합니다.
+  - **Google Drive** — 결과를 저장할 구글 시트를 읽고 씁니다.
+  - **Gmail** — 결과 이메일을 보냅니다.
+- **구글 계정과 알림을 받을 이메일 주소.** 시트는 Google Drive 커넥터에
+  연결한 계정에 만듭니다.
 
-다른 AI 에이전트를 쓴다면, 같은 능력 4가지를 갖췄는지만 확인하면 됩니다: 웹
-탐색, 구글 시트 읽고 쓰기, 이메일 발송, 매일 예약 실행.
+> **왜 Chrome을 사용하나요?** API 키나 인증 코드를 설정하지 않아도
+> 비개발자와 초보자가 바로 시작할 수 있도록 일부러 브라우저 방식으로
+> 만들었습니다. 개발 경험이 있고 채용 사이트의 공식 API 접근 권한도 있다면
+> 수집 단계를 API 방식으로 바꿀 수 있습니다. 다만 이 저장소에는 API 연동
+> 코드가 포함되어 있지 않으며, 링크·날짜·중복 제거 규칙은 기존 스펙과 같게
+> 유지해야 합니다.
+
+다른 AI 에이전트를 사용해도 됩니다. 웹 탐색, 구글 시트 읽기·쓰기, 이메일
+발송, 매일 예약 실행 기능을 모두 지원하는지 확인하세요.
 
 ## 1단계 — 저장소 받기
 
+명령은 저장소 파일이 아니라 **터미널**에 입력합니다.
+
+- Windows에서는 시작 메뉴에서 **PowerShell** 또는 **Windows Terminal**을
+  엽니다.
+- macOS나 Linux에서는 **Terminal**을 엽니다.
+
+아래 두 줄을 한 줄씩 붙여넣고 Enter를 누르세요.
+
 ```bash
-git clone https://github.com/<본인-아이디>/catch-before-jobs-vanish.git
+git clone https://github.com/Journey-512/catch-before-jobs-vanish.git
 cd catch-before-jobs-vanish
 ```
 
-git이 낯설면 GitHub 페이지에서 **Code → Download ZIP**으로 내려받아 아무
-폴더에나 풀어도 됩니다. 아래 과정은 똑같습니다.
+`git` 명령을 사용할 수 없거나 Git이 낯설다면 GitHub 페이지에서 **Code →
+Download ZIP**을 선택하세요. ZIP 파일을 원하는 폴더에 풀면 이후 과정은
+같습니다.
 
 ## 2단계 — 구글 시트 만들기
 
-**탭 2개**짜리 새 구글 시트를 만듭니다. 두 탭은 맡는 데이터가 다릅니다.
-**`Jobs`**는 공고 이력입니다 — 발견한 공고, 중복 확인 근거, 그리고 내가 적는
-지원 결과가 쌓입니다. **`Companies`**는 회사 registry입니다 — 파이프라인이
-어떤 회사를 어떻게 지켜볼지를 정하는 유일한 원본입니다.
+새 구글 시트를 만들고 탭 이름을 정확히 **`Jobs`**와 **`Companies`**로
+지정하세요. 파이프라인은 이 이름으로 탭을 찾습니다.
 
-**`Jobs`** — 10열:
+### `Jobs` 탭
+
+첫 번째 행에 다음 10개 열을 순서대로 입력하세요.
 
 | Date Added | Company | Job Title | Location | Source | Posted Date | Link | Status | Fit Score | Fit Reason |
 |---|---|---|---|---|---|---|---|---|---|
 
-`Status` 열은 시스템과 내가 같이 씁니다. 시스템은 `Excluded (...)` / `Closed
-(날짜)`를 적고 **나는** 지원 결과를 적습니다 (`Applied`, `Passed - CV`,
-`Rejected - CV`, `Lost` — referral로 지원했다면 `(referral)`을 뒤에 붙입니다).
-내가 적은 값은 나중에 점수 검증 자료가 됩니다. 시스템이 덮어쓰는 일은 없습니다.
+`Status` 열에는 시스템이 `Excluded (...)` 또는 `Closed (날짜)`를 기록합니다.
+지원 결과는 사용자가 `Applied`, `Passed - CV`, `Rejected - CV`, `Lost` 중
+하나로 입력하세요. 추천을 받아 지원했다면 `Applied (referral)`처럼
+`(referral)`을 뒤에 붙입니다. 사용자가 입력한 값은 시스템이 덮어쓰지
+않습니다.
 
-**`Companies`** — 회사 registry, 9열:
+### `Companies` 탭
+
+첫 번째 행에 다음 9개 열을 순서대로 입력하세요.
 
 | Index | Company | Aiming | Match Level | URL | Source site | HQ | Topics | Memo |
 |---|---|---|---|---|---|---|---|---|
-| 1 | `<Company name>` | `<Aiming or blank>` | `<Strong or Soft>` | `<careers URL or blank>` | `<source or blank>` | `<HQ or blank>` | `<topics or blank>` | `<note or blank>` |
+| 1 | `<회사명>` | `Aiming` 또는 빈칸 | `Strong` 또는 `Soft` | `<채용 페이지 URL 또는 빈칸>` | `<출처 또는 빈칸>` | `<본사 또는 빈칸>` | `<관련 분야 또는 빈칸>` | `<메모 또는 빈칸>` |
 
-이 탭이 **회사 목록의 유일한 원본**입니다 — 로컬에 회사 파일은 없습니다. 첫
-실행 전에 관심 회사를 이 탭에 한 줄에 한 회사씩 직접 입력하세요 (형식 참고:
-[`your-input/companies.example.md`](your-input/companies.example.md)).
-파이프라인은 매 실행 시작 시 이 탭을 읽어 회사별 검색, Aiming 검색, 주간
-딥스캔의 대상을 정합니다. 새로 발견한 회사를 이 탭에 추가하기도 합니다
-(`config.md`에서 켜 둔 경우). 자동 추가된 행은 다음 실행부터 그 검색들에
-포함되고, 기존 행에 내가 적은 값을 파이프라인이 덮어쓰는 일은 없습니다.
+회사 목록은 다음 두 방식으로 채워집니다.
 
-`Aiming`은 지금 집중해서 노리는 회사 1-3곳에 직접 적어 두는 표시입니다. Aiming
-표시가 있는 회사는 매일 실행 때 검색 범위가 넓어집니다: 최근 24시간 대신 7일치를
-보고, `preferences.md`에 적어 둔 확장 지역까지 찾고, 그 회사 채용 페이지도 직접
-확인합니다. 이 표시는 반드시 직접 적으세요 — 시스템이 자동으로 추가한 회사에는
-절대 붙지 않습니다.
+1. **수동 입력:** 첫 실행 전에 관심 회사를 한 행에 하나씩 직접 입력하세요.
+   집중해서 지원할 회사 1~3곳은 `Aiming` 열에 `Aiming`이라고 적고, 나머지는
+   빈칸으로 둡니다. 정확한 입력 형식과 각 열의 의미는
+   [`your-input/companies.example.md`](your-input/companies.example.md)를
+   참고하세요.
+2. **자동 추가:** `config.md`의 `Company discovery`에서 자동 추가를 켜면,
+   파이프라인이 조건을 통과한 새 회사를 이 탭에 추가합니다. 자동 추가된 행의
+   `Aiming`은 빈칸으로 남고, 확인된 값만 기록됩니다. 해당 회사는 다음
+   실행부터 회사별 검색 대상에 포함됩니다.
+
+`Companies` 탭이 회사 목록의 유일한 기준입니다. 로컬 회사 목록 파일은
+사용하지 않으며, 파이프라인은 기존 행에 사용자가 입력한 값을 덮어쓰지
+않습니다.
 
 **이전 버전에서 업그레이드한다면?** 예전 `your-input/companies.md`는 더 이상
-읽히지 않습니다 — 그렇다고 시스템이 지우지도 않습니다. 개인 파일이니까요.
-행을 이 탭으로 옮기세요: Name → Company, careers URL → URL, Match level →
-Match Level, Aiming → Aiming, note → Memo. 나머지 열은 확실히 아는 값만
-채웁니다. 옮긴 내용이 빠짐없는지 시트에서 원래 파일과 대조해 확인한 뒤, 원래
-파일을 보관할지 지울지는 직접 결정하세요.
+읽히지 않으며 시스템이 자동으로 삭제하지도 않습니다. 행을 이 탭으로
+옮기세요: Name → Company, careers URL → URL, Match level → Match Level,
+Aiming → Aiming, note → Memo. 옮긴 내용을 원래 파일과 대조한 뒤, 기존
+파일의 보관 또는 삭제 여부는 직접 결정하세요.
 
-**시트는 어디에 두나요?** 구글 드라이브 안이면 어디든, 이름이 뭐든 상관없습니다.
-시스템은 시트를 이름이나 위치가 아니라 **시트 ID**로 찾습니다. 시트를 열고
-주소창을 보면:
+시트는 Google Drive 안의 어느 폴더에 두어도 되고 파일 이름도 자유롭게 정할
+수 있습니다. 시스템은 **시트 ID**로 시트를 찾습니다. 시트를 열고 주소창을
+확인하세요.
 
 ```
-https://docs.google.com/spreadsheets/d/이-긴-문자열이-시트-ID/edit
+https://docs.google.com/spreadsheets/d/THIS-LONG-STRING-IS-THE-ID/edit
 ```
 
-`/d/`와 `/edit` 사이의 긴 문자열이 시트 ID입니다. 이걸 복사해 두었다가 다음
-단계에서 `your-input/config.md`의 `Google Sheet ID:` 줄에 붙여넣으면 됩니다 —
-넣는 곳은 거기 한 군데뿐입니다. 시트는 Google Drive 커넥터에 연결한 그 구글
-계정에 있기만 하면 됩니다.
+`/d/`와 `/edit` 사이의 문자열을 복사해 다음 단계에서
+`your-input/config.md`의 `Google Sheet ID:`에 붙여넣으세요.
 
 ## 3단계 — `your-input/` 채우기
 
-이 폴더의 깨끗한 **템플릿 파일 2개**를 복사합니다 — 이름에서 `.template`을
-빼고 꺾쇠괄호로 표시된 자리표시자를 본인 값으로 바꾸세요:
+템플릿 파일 두 개를 복사하고 `< >`로 표시된 자리표시자를 본인의 값으로
+바꾸세요.
+
+macOS 또는 Linux:
 
 ```bash
 cd your-input
@@ -312,99 +376,126 @@ cp config.template.md config.md
 cd ..
 ```
 
-(윈도우 PowerShell에서는
-`Copy-Item preferences.template.md preferences.md`처럼 쓰면 됩니다.)
+Windows PowerShell:
 
-템플릿에는 런타임 필드·자리표시자·기본값만 들어 있습니다. 1회성 CV 변환
-요청문과 각 필드의 설명은
-[`your-input` 안내 (한국어)](your-input/README.md#cvmd-만들기-한국어-안내)에
-한 번만 정리되어 있습니다.
+```powershell
+cd your-input
+Copy-Item preferences.template.md preferences.md
+Copy-Item config.template.md config.md
+cd ..
+```
 
-`cv.md`, `preferences.md`, `config.md`가 모두 준비된 뒤에만 다음 단계로
+최초 한 번만 실행하면 되는 CV 변환 요청문과 각 필드의 설명은
+[`your-input` 한국어 안내](your-input/README.md#cvmd-만들기-한국어-안내)에
+있습니다.
+
+`cv.md`, `preferences.md`, `config.md`가 모두 준비되면 다음 단계로
 넘어가세요. 기존 버전에서 업그레이드한다면
 [3.2 업그레이드 안내](CHANGELOG.md#업그레이드-안내)를 따르세요.
 
 ## 4단계 — 에이전트에 파이프라인 넘기기
 
-방법은 두 가지입니다. 본인 에이전트에 맞는 쪽을 고르세요. 어느 쪽이든 실제
-실행 트리거는 `config.md`가 아니라 에이전트에 등록한 예약 작업입니다.
-파이프라인이 `Alert schedule` 줄을 읽어 예약을 만들거나 바꾸는 일은
-없습니다. 예약은 `config.md`의 Alert delivery 섹션과 맞춰서, cron 없이
-자연어로 등록하면 됩니다 (예: "Asia/Seoul 기준 매일 오전 9시"). 여기서 두
-가지가 따라옵니다: 나중에 `config.md`의 일정이나 시간대를 바꾸면 스케줄러의
-예약도 같이 수정해야 하고(파일만 고치면 아무것도 안 바뀝니다), 등록한 뒤에는
-표시되는 다음 실행 시각이 원하는 현지 시각과 맞는지 확인하세요.
+사용하는 에이전트에 맞는 방법을 선택하세요. 실제 실행을 시작하는 것은
+`config.md`가 아니라 **에이전트에 등록한 예약 작업**입니다.
 
-**스킬 설치 — 에이전트가 Claude Code라면.** Claude Code 안에서 명령 두 줄을
-실행합니다:
+예약 작업의 일정과 시간대는 `config.md`의 `Alert delivery`와 맞춰 자연어로
+등록하세요. 예: `Asia/Seoul 기준 매일 오전 9시`. `config.md`의 일정이나
+시간대를 나중에 바꾸면 예약 작업도 별도로 수정해야 합니다. 등록 후에는 다음
+실행 시각이 원하는 현지 시각과 일치하는지 확인하세요.
+
+### Claude Code에 스킬 설치
+
+Claude Code 안에서 다음 명령 두 줄을 실행하세요.
 
 ```
 /plugin marketplace add Journey-512/catch-before-jobs-vanish
 /plugin install catch-before-jobs-vanish@catch-before-jobs-vanish
 ```
 
-그러면 파이프라인이 `job-alert` 스킬로 등록됩니다. 예약 작업은 한 줄이면
-됩니다. "Asia/Seoul 기준으로 매일 오전 9시에 job-alert skill을 실행해줘. 내
-repo는 `C:\Users\<본인>\catch-before-jobs-vanish`"처럼 일정·시간대와 본인
-repo 경로를 함께 말해 주세요. 스킬은 그 경로로 `your-input/`을 찾습니다.
+설치 후 일정, 시간대와 로컬 저장소 경로를 포함해 예약 작업을 요청하세요.
 
-**복사해 붙여넣기 — Cowork 등 다른 에이전트라면.** (만든 사람도 매일 이
-방식으로 돌립니다.)
+> Asia/Seoul 기준 매일 오전 9시에 `job-alert` 스킬을 실행해 줘. 내 저장소는
+> `C:\Users\me\catch-before-jobs-vanish`에 있어.
+
+예시 경로는 실제로 저장소를 받은 경로로 바꾸세요.
+
+### Cowork 등 다른 에이전트에 프롬프트 등록
 
 1. [`skills/job-alert/SKILL.md`](skills/job-alert/SKILL.md)를 엽니다.
-2. 프롬프트 블록을 복사합니다 (GitHub에서는 블록 모서리의 복사 버튼을 누르면
-   한 번에 됩니다).
-3. `your-input/`을 찾을 수 있도록, Step 0의 repo 경로 자리표시자 한 곳만 본인
-   폴더 경로로 바꿉니다. **다른 부분은 손대지 마세요** — 나머지는 실행할 때
-   읽어옵니다.
-4. 그 프롬프트로 에이전트에 예약 작업을 만듭니다.
+2. 프롬프트 블록 전체를 복사합니다.
+3. `Step 0`의 저장소 경로 자리표시자 한 곳만 실제 로컬 경로로 바꿉니다.
+4. **다른 부분은 수정하지 않은 채** 예약 작업으로 등록합니다.
 
-Cowork 모드에서는 그냥 *"이 프롬프트를 Asia/Seoul 기준 매일 오전 9시에
-실행해줘"*라고 말하고 블록을 붙여넣어도 됩니다.
+Cowork에서는 프롬프트를 붙여넣고 `이 프롬프트를 Asia/Seoul 기준 매일 오전
+9시에 실행해 줘`라고 요청하면 됩니다.
 
 ## 5단계 — 테스트 실행
 
-작업을 한 번 수동으로 실행해 보거나 첫 예약 실행을 기다립니다. 확인할 것:
+작업을 한 번 수동으로 실행하거나 첫 예약 실행을 기다린 뒤 확인하세요.
 
-- `Jobs` 탭에 새 행이 들어오고 `Posted Date`가 절대 날짜(YYYY-MM-DD)로 적혀
-  있다 — "Last 24h" 같은 상대 표현이 아니라.
-- 링크가 검색 URL이 아니라 공고별 `jobs/view/{id}` 영구 링크다.
-- 이메일이 **Top / Strong** 두 묶음으로 오고(컷 아래 공고는 없음), 자동 추가된
-  회사가 거부 안내와 함께 표시되고, 시트 링크가 붙어 있다.
-- JD 본문에서 발견된 지역 문제는 시트에 `Excluded (...)`로 남아 있지만 이메일엔
-  **안** 들어왔다.
-- 공고가 없는 조용한 날(또는 일부러 조건을 좁혀서) 한 번 더 돌려 보고
-  **하트비트(heartbeat)**를 확인한다: 매칭이 0건이어도 "No new matches. System
-  alive."라는 메일이 온다. 메일이 안 오면 결과가 없는 게 아니라 시스템이 죽었다
-  — 이걸 구분하려고 있는 장치입니다.
+1. `Jobs` 탭에 새 행이 추가되고 `Date Added`가 알림 시간대 기준
+   `YYYY-MM-DD HH:MM` 형식인지 확인합니다.
+2. `Posted Date`가 `YYYY-MM-DD` 절대 날짜로 저장되고, 필요한 경우
+   `estimated` 또는 `unknown` 표시가 붙는지 확인합니다. `Last 24h` 같은 상대
+   표현은 저장되면 안 됩니다.
+3. 링크가 검색 URL이 아니라 공고별 `jobs/view/{id}` 영구 링크인지 확인합니다.
+4. 이메일에 **Top / Strong** 공고, 자동 추가된 회사를 검토할 수 있는 안내와
+   시트 링크가 포함되어 있는지 확인합니다.
+5. 채용공고 본문에서 확인된 지역 조건 위반 공고가 시트에는
+   `Excluded (...)`로 기록되고 이메일에서는 제외되는지 확인합니다.
+6. 매칭이 0건일 때도 `No new matches. System alive.` 이메일이 오는지
+   확인합니다. 이메일이 전혀 오지 않으면 실행 또는 발송 문제입니다.
 
 ## 6단계 — 조정 (피드백 루프 두 개 — 섞지 마세요)
 
-1. **Calibration loop — 채점이 맞나?** 점수가 이상한 날 → 그 행의 Fit Reason을
-   읽고 → `cv.md`의 Skill calibration에 **한 줄**을 추가하거나 고칩니다 → 다음
-   실행부터 반영됩니다. 프롬프트와 기준표는 그대로 두고 내 데이터만 다듬는
-   방식입니다.
-2. **Outcome loop — 점수가 예측을 하나?** 지원할 때마다 Status 열을 채워
-   두세요. 딥스캔 날 리포트가 점수 구간별 서류 통과율(cold와 referral은 따로)을
-   정리해 줍니다. preferences나 calibration을 고칠 땐 건수가 충분히 쌓인
-   패턴인지부터 확인하세요 — 두세 건으로 성급하게 바꾸면 오히려 나빠집니다.
+1. **점수 보정:** 점수가 이상해 보이면 해당 행의 `Fit Reason`을 확인하고
+   `cv.md`의 `Skill calibration` 한 줄을 조정합니다.
+2. **결과 검증:** 지원 결과에 맞춰 `Status`를 업데이트합니다. 주간 리포트의
+   점수 구간별 서류 통과율은 일반 지원(cold)과 추천 지원(referral)을 나눠
+   확인하세요.
 
-다음 설정은 이유가 생기면 언제든 바꾸면 됩니다:
-
-- 이메일이 너무 많거나 적다 → `preferences.md`의 컷 (70은 기본값이지 정답이
-  아닙니다).
-- 엉뚱한 직무가 섞인다 → 직무명 허용/제외 목록.
-- 회사 목록이 너무 빨리 (또는 너무 안) 는다 → `config.md`의 Company
-  discovery 설정.
+이메일 수는 `preferences.md`의 `Cutoff`, 직무 정확도는 허용·제외 직무명,
+회사 자동 추가 범위는 `config.md`의 `Company discovery`에서 조정합니다. 채점
+방식의 자세한 설명은 [한국어 채점 기준표](docs/fit-scoring-rubric.ko-KR.md)를
+참고하세요.
 
 ## 문제 해결
 
-| 증상                             | 원인 추정                                             | 해결                                                                                                |
-| ------------------------------ | ------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| 저장한 링크드인 링크가 오후에 죽어 있음         | 영구 링크 대신 검색 URL을 저장함                              | 에이전트가 검색 URL이 아니라 공고별 `jobs/view/{id}` 영구 링크를 추출하는지 확인                                            |
-| `Posted Date`에 "Last 24h"라고 적힘 | 상대 표현을 날짜로 바꾸지 않고 그대로 저장함                         | 프롬프트 2단계가 캡처 시점에 YYYY-MM-DD로 변환하는지 확인                                                             |
-| 엉뚱한 회사의 공고가 저장됨                | 링크드인이 자동 선택한 `currentJobId`를 그대로 믿음               | 결과 목록 전체를 읽어 회사+직무명으로 맞는 공고를 찾도록 확인                                                               |
-| 같은 공고가 자꾸 다시 들어옴               | 중복 제거가 과거 기록을 못 봤거나(시트 읽기 실패), 채용 페이지 URL 표기가 제각각 | 이메일에 "과거 대조 못 함" 공지가 있는지 확인, 채용 사이트별로 URL이 한 가지 형식으로 통일되는지 확인                                     |
-| `Companies` 탭의 회사 공고가 안 잡힘        | 채용 페이지가 개편됐거나, 깨진 회사 필터가 조용히 빈 결과를 돌려줌            | 채용 페이지는 원래 예고 없이 바뀝니다 — 잡보드로 대체 검색하고 공백을 이메일에 알리는 게 정상 동작. 빈 검색 결과는 키워드 검색으로 한 번 더 확인해야 믿을 수 있습니다 |
-| Aiming·회사별·딥스캔 검색이 통째로 건너뛰어짐     | `Companies` 탭을 읽지 못했거나 헤더가 9열 계약과 달라짐              | 이메일에 건너뛴 범위와 사유가 표시됩니다. 2단계의 9열 헤더로 복구하고 시트 ID·공유 설정을 확인한 뒤 다시 실행하세요                                |
-| 이메일이 아예 안 옴                    | 실행이 죽었거나 발송에 실패함                                  | 하트비트 규칙 덕에 침묵 = 고장입니다: 예약 작업이 실행됐는지부터 보고, 그 다음 Gmail 초안함을 확인하세요 — 발송에 실패하면 초안이 남아 있습니다            |
+### LinkedIn 링크가 몇 시간 뒤 열리지 않음
+
+검색 URL이 저장되었을 수 있습니다. 에이전트가 공고별 `jobs/view/{id}` 영구
+링크를 추출하는지 확인하세요.
+
+### `Posted Date`에 `Last 24h`가 저장됨
+
+상대 날짜를 그대로 저장한 경우입니다. 프롬프트 2단계에서 수집 시점에
+`YYYY-MM-DD`로 변환하는지 확인하세요.
+
+### 다른 회사의 공고가 저장됨
+
+LinkedIn이 자동 선택한 `currentJobId`를 사용했을 수 있습니다. 결과 목록 전체를
+읽고 회사명과 직무명이 모두 일치하는 공고를 선택하는지 확인하세요.
+
+### 같은 공고가 반복해서 들어옴
+
+과거 시트를 읽지 못했거나 같은 채용 페이지 URL이 여러 형식으로 저장되었을 수
+있습니다. 이메일에서 과거 이력을 확인하지 못했다는 안내를 확인하고, 같은 채용
+사이트의 URL을 한 가지 형식으로 통일하세요.
+
+### `Companies` 탭에 있는 회사의 공고가 검색되지 않음
+
+회사 채용 페이지나 회사 필터가 바뀌었을 수 있습니다. 파이프라인이 채용 정보
+사이트로 대체 검색했는지 이메일에서 확인하고, 빈 결과는 키워드 검색으로 한 번
+더 확인하세요.
+
+### `Aiming`·회사별·주간 심층 검색이 모두 건너뛰어짐
+
+`Companies` 탭을 읽지 못했거나 헤더가 정해진 9열 구조와 다를 수 있습니다.
+2단계의 헤더로 복구하고 시트 ID와 공유 설정을 확인한 뒤 다시 실행하세요. 이
+경우에도 `preferences.md`를 사용하는 일반 LinkedIn·Indeed 검색은 계속
+실행됩니다.
+
+### 이메일이 전혀 오지 않음
+
+예약 작업이 실행됐는지 먼저 확인한 다음 Gmail 초안함을 확인하세요. 이메일
+발송에 실패하면 초안이 남아 있을 수 있습니다.

@@ -20,9 +20,10 @@ experience. Seoul-based with EU work authorization (no sponsorship needed),
 targeting Product Manager roles in Europe and relocating on offer.
 
 ## Experience
-Company names are replaced with a one-line profile — [stage | domain | scale] —
-because the scorer needs the shape of the experience, not the brand. Keep real
-names in if you don't mind them living in a local (gitignored) file.
+The companies below are fictional and described by profile —
+`[stage | domain | scale]` — so this public example contains no real person's
+history. In your private `cv.md`, preserve the company names written in your
+source CV unless you explicitly choose to anonymize them.
 
 - **Product Manager (Search & Reviews)** — travel booking platform
   [Series C, Korea | stays · activities] — 2 years.
@@ -56,6 +57,9 @@ The anti-inflation list the scorer must respect — see
 calibration"). Capped lines (the Transferable ones) use the syntax:
 `skill: one-line scope. [requirement type] = [max credit]`.
 An agent may draft this section from your CV; **you confirm it**.
+Once you have reviewed it, treat it as owner-maintained data: a later CV
+conversion should preserve these lines unless new, explicit evidence supports
+a change.
 
 **Core** (always match — Direct on the requirement itself, up to Adjacent on
 neighboring requirements):

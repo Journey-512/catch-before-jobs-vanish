@@ -22,6 +22,23 @@ One row per company. A row with an empty `Company` cell is not treated as a
 company. For the optional columns, blank beats a guess — fill them only
 where you actually know the value.
 
+Do not type the angle brackets shown in the contract row. The fictional rows
+below show actual cell values for three common cases:
+
+| Index | Company | Aiming | Match Level | URL | Source site | HQ | Topics | Memo |
+|---|---|---|---|---|---|---|---|---|
+| 1 | Northstar Mobility | Aiming | Strong | `https://example.com/careers` | Manual research | Amsterdam | mobility; consumer | Priority target |
+| 2 | Cedar Health |  | Soft |  | LinkedIn | Berlin | digital health |  |
+| 3 | Orbit Travel |  | Strong |  | LinkedIn |  | travel technology | Auto-added 2026-01-15 |
+
+All names and values above are examples. Row 1 is a manually maintained
+priority company, row 2 shows that optional cells may stay blank, and row 3
+shows an auto-added row: `Aiming` is blank and `Memo` records the date.
+
+위 회사명과 값은 모두 가공된 예시입니다. 1행은 사용자가 직접 관리하는
+`Aiming` 회사, 2행은 선택 항목을 빈칸으로 두는 경우, 3행은 `Aiming`을 비우고
+`Memo`에 날짜를 남긴 자동 추가 행을 보여줍니다.
+
 ## What the columns mean
 
 - **`Aiming`** — a hand-set flag for the 1-3 companies you're actively
@@ -37,11 +54,22 @@ where you actually know the value.
   running number, where the company was found, headquarters, industry
   keywords, and free-form notes.
 
+### 한국어로 보는 열 의미
+
+- **`Aiming`** — 지금 집중해서 지원할 회사 1~3곳에만 사용자가 직접
+  `Aiming`을 입력합니다. 자동 추가된 행은 항상 빈칸입니다.
+- **`Match Level`** — `preferences.md`의 산업 분류에 맞춰 `Strong` 또는
+  `Soft`를 입력하며, 딥스캔 순서를 정하는 데 사용됩니다.
+- **`URL`** — 확인된 회사 채용 페이지 주소입니다. 모르면 추측하지 말고
+  빈칸으로 두세요.
+- **`Index` / `Source site` / `HQ` / `Topics` / `Memo`** — 순번, 회사를 발견한
+  곳, 본사, 산업 키워드, 자유 메모입니다.
+
 ## Auto-add
 
 The pipeline can register new companies it discovers by appending rows to
 this tab (Aiming left blank, Memo noting "Auto-added" and the date); those
 rows join the company searches from the next run. Whether auto-add is on,
 and the maturity bar a new company must clear, are settings in `config.md`
-— see the [`config.md` field guide](README.md#configmd--template--field-guide).
+— see the [`config.md` field guide](README.md#config-field-guide).
 Existing rows are never modified: what you typed stays yours.
