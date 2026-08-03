@@ -139,10 +139,10 @@ Claude Skill; the pipeline itself is unchanged from 3.0.0.
 
 ## [3.0.0] — 2026-07-28
 
-The pipeline ran daily in production for a month — evolving into the private
+The pipeline ran daily in production for two months — evolving into the private
 2.x generation below — and its scoring was then backtested against past real
 application outcomes. This release rewrites the template and docs around what
-that month proved and disproved.
+those two months proved and disproved.
 
 ### Changed
 
@@ -366,9 +366,9 @@ timezone`과 `Maximum timezone difference`로 바꿉니다. 새 필드가 없으
 
 ## [3.0.0] — 2026-07-28
 
-파이프라인을 한 달간 매일 실운영했고(그 사이 아래의 비공개 2.x 세대로
+파이프라인을 두 달간 매일 실운영했고(그 사이 아래의 비공개 2.x 세대로
 진화했습니다), 채점을 과거 실제 지원 결과로 백테스트했습니다. 이 릴리스는
-그 한 달이 증명한 것과 반증한 것을 중심으로 template과 문서를 다시 쓴 것입니다.
+그 두 달이 증명한 것과 반증한 것을 중심으로 template과 문서를 다시 쓴 것입니다.
 
 ### 바뀐 것
 

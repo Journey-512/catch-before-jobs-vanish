@@ -18,8 +18,8 @@ itself as a scheduled [Claude](https://claude.com) task — every day it
 checks LinkedIn, Indeed, and your target companies' careers pages, then
 sends one email with the recommended postings and their scores.
 
-> **v3 (2026-07).** Rewritten after a month of daily production runs and the
-> backtest above. What changed and why: [`CHANGELOG.md`](CHANGELOG.md).
+> **v3 (2026-07).** Rewritten after two months of daily production runs and
+> the backtest above. What changed and why: [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Demo
 
@@ -62,7 +62,7 @@ candidates and checks them one by one against the experience and results in
 your CV. Competencies that fit everyone are excluded from scoring, and a
 must-have with no supporting evidence keeps a posting below the
 recommendation bar no matter how strong the rest looks. The rubric was
-calibrated through a month of daily production runs and a backtest of past
+calibrated through two months of daily production runs and a backtest of past
 real applications with known outcomes, including CV screens passed at Uber
 and Google. The score is a priority signal for where to apply, not a
 prediction of passing — and every posting comes with a Fit Reason laying

@@ -8,7 +8,7 @@
 ## How this rubric evolved
 
 **v1** scored five impression-level dimensions (Domain 30 / Role 25 / Seniority
-20 / Company 15 / Location 10). A month of daily production runs showed the
+20 / Company 15 / Location 10). Two months of daily production runs showed the
 problem: impression scoring saturates. Most PM postings share the same generic
 asks, a reasonable profile "fits" all of them, and every score lands in the same
 band — the rubric stops discriminating.
