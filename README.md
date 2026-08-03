@@ -23,9 +23,14 @@ sends one email with the recommended postings and their scores.
 
 ## Demo
 
-*(Coming soon: the example persona from [`your-input/`](your-input) run
-through a full pipeline pass — the morning email and the Sheet it writes, as
-screenshots.)*
+One full run, start to finish: the morning email arrives, and the tracking
+Sheet behind it holds a row per posting with the score, the reason behind
+that score, and any company the run added on its own.
+
+![A daily run: the alert email and the tracking Sheet it writes](docs/demo.gif)
+
+*All data shown is a demo: fictional persona, real public job postings,
+illustrative Status values.*
 
 ## What is this
 
