@@ -41,7 +41,7 @@ fits your career, and keeps every result in one place.
 |---|---|
 | **Evidence-based fit scoring** | Each posting's requirements are checked item by item against the experience and results recorded in your CV — not how many words overlap, but whether there's evidence for the skill. The reasoning behind every score is kept in the Fit Reason ([rubric](skills/job-alert/fit-scoring-rubric.md)). |
 | **Skill calibration** | For each skill you record how far you've actually gone, and the scorer never assumes ability beyond it. An agent drafts the list from your CV; you review and confirm it. |
-| **Daily scan of fresh postings** | Every morning it checks the last 24 hours on LinkedIn and Indeed, plus the careers pages of the companies you're currently targeting. Once a week it widens the sweep to the rest of your watchlist. |
+| **Daily scan of fresh postings** | Every morning it checks the last 24 hours on LinkedIn and Indeed, plus the careers pages of the companies you're currently targeting. Once a week it also sweeps Strong- and Soft-match companies up to the per-tier cap in `config.md` (8 per tier by default). |
 | **Duplicate-free history** | Every posting gets exactly one row. If the same posting reappears on another site or under a changed link, it's recognized as the same posting and never recorded twice. |
 
 ## Why it's different
@@ -77,7 +77,7 @@ All of that tuning is on the record: every change and its reason is in the
 At its core this isn't an application running on a server — it's a work
 order an AI agent carries out every day. There's no server to operate and no
 code to write. With your CV and application criteria at hand, first-time
-setup takes about 30 minutes.
+setup takes about 10 minutes.
 
 Built and tested with Claude **Cowork** and these three connectors (a
 connector is Claude's official way of plugging into another service on your
@@ -302,8 +302,9 @@ verify the behavior yourself.
 
 The repo is MIT-licensed and there is no server cost. Your AI agent's and
 connected services' plans or usage limits still apply. A normal run targets
-roughly 25,000-30,000 tokens; the deep-scan day, which sweeps your full
-watchlist, uses more.
+roughly 25,000-30,000 tokens; the deep-scan day, which checks Strong and Soft
+companies up to the configured cap in each tier (8 per tier by default), uses
+more.
 
 **Is it okay to check LinkedIn and Indeed postings this way?**
 

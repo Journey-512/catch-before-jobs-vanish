@@ -45,8 +45,21 @@ cd catch-before-jobs-vanish
 ```
 
 If the `git` command is unavailable or Git is unfamiliar, select **Code →
-Download ZIP** on the GitHub page. Unzip it into any folder; the remaining
-steps are the same.
+Download ZIP** on the GitHub page and extract it. GitHub normally names the
+extracted folder `catch-before-jobs-vanish-main`.
+
+Before continuing, move the terminal into that extracted folder. Type `cd `
+(including the space), drag the extracted folder from your file manager (such
+as File Explorer or Finder) into the terminal, and press Enter. This is
+equivalent to:
+
+```text
+cd "<path-to-your-extracted-catch-before-jobs-vanish-main-folder>"
+```
+
+The terminal path should now end with `catch-before-jobs-vanish-main`. Keep
+that terminal open; the `cd your-input` command in Step 3 starts from this
+folder.
 
 ## Step 2 — Create the Google Sheet
 
@@ -300,8 +313,20 @@ cd catch-before-jobs-vanish
 ```
 
 `git` 명령을 사용할 수 없거나 Git이 낯설다면 GitHub 페이지에서 **Code →
-Download ZIP**을 선택하세요. ZIP 파일을 원하는 폴더에 풀면 이후 과정은
-같습니다.
+Download ZIP**을 선택해 압축을 푸세요. GitHub에서 받은 압축 파일은 보통
+`catch-before-jobs-vanish-main` 폴더로 풀립니다.
+
+계속하기 전에 터미널의 현재 위치를 이 압축 해제 폴더로 옮기세요. 터미널에
+`cd `를 입력하고(뒤의 공백 포함), 파일 관리자(파일 탐색기나 Finder 등)에서
+압축 해제 폴더를 터미널로 끌어온 뒤 Enter를 누릅니다. 다음 명령과 같은
+동작입니다.
+
+```text
+cd "<압축을-푼-catch-before-jobs-vanish-main-폴더의-전체-경로>"
+```
+
+터미널 경로 끝에 `catch-before-jobs-vanish-main`이 표시되는지 확인하고 이
+터미널을 계속 사용하세요. 3단계의 `cd your-input`은 이 폴더에서 시작합니다.
 
 ## 2단계 — 구글 시트 만들기
 
